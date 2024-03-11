@@ -48,8 +48,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         echo "Registration successful!";
 
-        // Redirect to quiz.php
-        header("Location: quiz.php");
+        // Redirect to index.php
+        header("Location: index.php");
         exit();
     } else {
         echo "Error writing user data.";

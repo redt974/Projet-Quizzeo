@@ -1,3 +1,45 @@
+<?php
+session_start();
+
+// Charger les attractions depuis le fichier CSV
+$attractions = [];
+$file = fopen("quiz.csv", "r");
+
+if ($file !== false) {
+    // Ignorer la première ligne (en-tête)
+    fgetcsv($file);
+
+    // Lire chaque ligne du fichier CSV
+    while ($attraction = fgetcsv($file)) {
+        $attractions[] = [
+            'id' => $attraction[0],
+            'name' => $attraction[1],
+            'image' => $attraction[2],
+            'description' => $attraction[3]
+        ];
+    }
+
+    fclose($file);
+}
+
+// Ajouter ou supprimer des attractions aux favoris
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["action"]) && isset($_POST["attractionId"])) {
+    $action = $_POST["action"];
+    $attractionId = $_POST["attractionId"];
+
+    if ($action == "add" && !in_array($attractionId, $_SESSION["favorites"])) {
+        $_SESSION["favorites"][] = $attractionId;
+    } else if ($action == "remove" && ($index = array_search($attractionId, $_SESSION["favorites"])) !== false) {
+        unset($_SESSION["favorites"][$index]);
+    }
+
+    // Redirection pour éviter la soumission du formulaire lors du rafraîchissement
+    header("Location: index.php");
+    exit();
+}
+
+// En-tête HTML
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,7 +80,7 @@
     <?php 
         include './components/header.php';           
     ?>
-    <?php if (!isset($_SESSION["email"])) : 
+    <?php if (!isset($_SESSION['email'][0])) : 
         header("Location: connexion.php");
     ?>
     <?php else : ?>
@@ -59,13 +101,13 @@
                         <td>
                             <!-- Formulaire pour ajouter ou supprimer des favoris -->
                             <?php if (in_array($attraction['id'], $_SESSION["favorites"])) : ?>
-                                <form method="post" action="quiz.php">
+                                <form method="post" action="index.php">
                                     <input type="hidden" name="action" value="remove">
                                     <input type="hidden" name="attractionId" value="<?= $attraction['id'] ?>">
                                     <button type="submit">Enlever des favoris</button>
                                 </form>
                             <?php else : ?>
-                                <form method="post" action="quiz.php">
+                                <form method="post" action="index.php">
                                     <input type="hidden" name="action" value="add">
                                     <input type="hidden" name="attractionId" value="<?= $attraction['id'] ?>">
                                     <button type="submit">Ajouter aux favoris</button>
@@ -98,7 +140,7 @@
                         <td><img class="table-img" src='<?= $favAttraction['image'] ?>' alt='<?= $favAttraction['name'] ?>'></td>
                         <td><?= $favAttraction['description'] ?></td>
                         <td>
-                            <form method='post' action='quiz.php'>
+                            <form method='post' action='index.php'>
                                 <input type='hidden' name='action' value='remove'>
                                 <input type='hidden' name='attractionId' value='<?= $favAttractionId ?>'>
                                 <button type='submit'>Enlever des favoris</button>

@@ -39,8 +39,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 echo "Login successful!";
 
-                // Redirect to quiz.php
-                header("Location: quiz.php");
+                // Redirect to index.php
+                header("Location: index.php");
                 exit();
             }
         }

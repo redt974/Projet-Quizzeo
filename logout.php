@@ -18,12 +18,12 @@ if (isset($_SESSION["email"])) {
     
             // Fermer la session
             session_destroy();
-            header("Location: index.php");
+            header("Location: connexion.php");
             exit();
         }
     } else {
         // Si l'utilisateur n'est pas connecté, simplement le rediriger
-        header("Location: index.php");
+        header("Location: connexion.php");
         exit();
     }
 
