@@ -1,0 +1,6 @@
+id,nom,image,description
+1,Space Mountain,./assets/space_mountain.png,"Montez à bord d'un vaisseau spatial pour une aventure intergalactique passionnante. Des virages serrés et des boucles à couper le souffle vous attendent dans cette montagne russe futuriste."
+2,Le Palais des Mirages,./assets/palais_mirages.png,"Explorez un monde magique où les illusions visuelles prennent vie. Des miroirs enchantés aux hologrammes époustouflants, le Palais des Mirages est une expérience sensorielle unique."
+3,Safari Africain,./assets/safari_africain.png,"Partez en safari à travers une réserve naturelle africaine. Rencontrez des animaux sauvages tels que lions, girafes et éléphants dans leur habitat naturel. Une aventure inoubliable au cœur de la nature."
+4,Parc Aquatique Atlantique,./assets/parc_aquatique_atlantique.png,"Plongez dans l'amusement au Parc Aquatique Atlantique. Des toboggans vertigineux aux piscines à vagues, profitez d'une journée remplie de rires et de sensations fortes sous le soleil."
+5,Le Mystère de l'Égypte,./assets/mystere_egypte.png,"Dévoilez les mystères de l'ancienne Égypte dans cette attraction immersive. Parcourez les couloirs des pyramides, découvrez des trésors cachés et vivez une aventure archéologique captivante."
