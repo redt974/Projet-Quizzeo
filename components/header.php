@@ -56,16 +56,12 @@
         .jaune{
             background-color: #FAB238;
         }
-
         nav a:hover {
-            background-color:#adbce6 ;
-            color: #FFF;
+            background-color:#FFCF85 ;
             transition: 0.3s;
         }
-
         nav a.active {
             background-color:#00B ;
-            color: #FFF;
         }
 
         .user {
@@ -97,20 +93,18 @@
         }
         
     </style>
-        <script defer src="https://kit.fontawesome.com/b32d44622b.js" crossorigin="anonymous"></script>
+    <script defer src="https://kit.fontawesome.com/b32d44622b.js" crossorigin="anonymous"></script>
 </head>
 <body>
 
     <nav> 
         <img src="./assets/quizzeo.png" alt="disney-title" />
         <?php             
-
-            if(isset($_SESSION['email'][0])) {
+            if(isset($_SESSION['email'])) {
                 echo "<a href='./logout.php' class='jaune'><div class='logout'><i class='fa-solid fa-arrow-right-from-bracket'></i></div></a>";
             } else {
                 echo '<a href="./connexion.php" class="jaune" '.(basename($_SERVER['PHP_SELF']) == 'connexion.php'  ? 'class="active"' : '').'><div class="user"><i class="fa-solid fa-user fa-lg"></i></div></a>';
             }
-
         ?>
     </nav>
 </body>
