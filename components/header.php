@@ -8,11 +8,19 @@
         body {
             margin: 0;
             font-family: 'Poppins';
-            
+            background-color: var(--primary-color);
+        }
+        :root{
+            --primary-color : #FFF;
+            --secondary-color : #000;
+        }
+        body.dark{
+            --primary-color :#000;
+            --secondary-color : #FFF;
         }
         nav {
             overflow: hidden;
-            background-color: rgba(255,255,255,0.6); 
+            background-color: rbga(var(--primary-color), 0.6);
             backdrop-filter: blur(10px);
             position: sticky;
             top: 0;
@@ -24,16 +32,23 @@
             border-bottom: 1px solid gray;
         }
 
-        nav img{
+        nav .quizzeo-title{
             width: 200px;
         }
 
-        nav img:hover{
+        nav .quizzeo-title:hover{
+            cursor: pointer;
+        }
+        nav .icon {
+            width: 48px;
+            height: 48px;
+        }
+        nav .icon:hover {
             cursor: pointer;
         }
 
         nav a {
-            color: #000;
+            color: var(--secondary-color);
             text-align: center;
             padding: 7px;
             text-decoration: none;
@@ -57,7 +72,7 @@
         }
 
         .user {
-            border: 2px solid #000;
+            border: 2px solid var(--secondary-color);
             border-radius: 25px;
             height: 35px;
             justify-content: center;
@@ -88,9 +103,8 @@
     <script defer src="https://kit.fontawesome.com/b32d44622b.js" crossorigin="anonymous"></script>
 </head>
 <body>
-
     <nav> 
-        <img src="./assets/quizzeo.png" alt="disney-title" />
+        <img class="quizzeo-title" src="./assets/quizzeo.png" alt="disney-title" />
         <?php             
             if(isset($_SESSION['email'])) {
                 echo "<a href='./logout.php' class='jaune'><div class='logout'><i class='fa-solid fa-arrow-right-from-bracket'></i></div></a>";
@@ -98,6 +112,25 @@
                 echo '<a href="./connexion.php" class="jaune" '.(basename($_SERVER['PHP_SELF']) == 'connexion.php'  ? 'class="active"' : '').'><div class="user"><i class="fa-solid fa-user fa-lg"></i></div></a>';
             }
         ?>
+        <img id="icon" class="icon" alt="Toggle Theme" src="./assets/moon.png" />
+        <script>
+            const icon = document.getElementById('icon'); // Remplacez 'yourIconId' par l'ID de votre icône
+
+            const toggleTheme = () => {
+                const isDarkTheme = document.body.classList.toggle("dark");
+                const newTheme = isDarkTheme ? 'dark' : 'light';
+                icon.src = `./assets/${newTheme === 'dark' ? 'sun' : 'moon'}.png`;
+                localStorage.setItem('theme', newTheme);
+            };
+
+            if (icon) {
+                const isDarkTheme = localStorage.getItem('theme') === 'dark';
+                icon.src = `./assets/${isDarkTheme ? 'sun' : 'moon'}.png`;
+                document.body.classList.toggle("dark", isDarkTheme);
+
+                icon.addEventListener("click", toggleTheme);
+            }
+        </script>
     </nav>
 </body>
 </html>
