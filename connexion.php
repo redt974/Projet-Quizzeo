@@ -1,11 +1,48 @@
+<?php
+    session_start();
+
+    // Check if the form has been submitted
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        // Retrieve form data
+        $email = $_POST["email"];
+        $password = $_POST["password"];
+
+        // Check if the user exists and password is correct
+        $file = fopen("utilisateurs.csv", "r");  // Use "r" for read mode
+
+        if ($file !== false) {
+            while (($user = fgetcsv($file)) !== false) {
+                if ($user[3] === $email && password_verify($password, $user[4])) {
+                    // Login successful, save in the session the email and id
+                    $_SESSION["email"] = $email;
+                    $_SESSION["prenom"] = $user[1];
+                    $_SESSION["id"] = $user[0];
+
+                    echo "Login successful!";
+
+                    // Redirect to index.php
+                    header("Location: index.php");
+                    exit();
+                }
+            }
+            fclose($file);  // Close the file after reading
+            // If login fails
+            echo "Invalid email or password.";
+        } else {
+            echo "Error reading user data.";
+        }
+    }
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connexion</title>
-    <link rel="icon" href='./assets/favicon.ico' />  
+    <link rel="icon" href='./assets/quizzeo.ico' />  
     <style>
+        @import url(https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap);@import url(https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap);
         body {
             font-family: Arial, sans-serif;
             display: flex;
@@ -102,7 +139,7 @@
         include './components/header.php';
     ?>
     <h1>Connexion</h1>
-    <form action="login.php" method="post">
+    <form action="connexion.php" method="post">
         <div class="form-group">
             <div class="label-input">
                 <label for="email">Addresse Mail :</label>
