@@ -2,4 +2,4 @@ id,prénom,nom,email,password,role
 1,admin,admin,admin@gamil.com,$2y$10$iPH04D6Ha3je9AKFtNs1wunx2ZnQqV6oMcYx/jXz5H66Z6QGb30lq,admin
 2,user,user,user@gmail.com,$2y$10$8v26S2XFGAV4Pr0jrtuueO224DTOPRF8I/k8Rwtr3jCnBrjSV1dze,user
 3,ecole,ecole,ecole@gmail.com,$2y$10$OgEhYY1KwuP9/ARsVidKtOVuoVo1yIvnxmFW4k8ua.6t5QKprbaJ.,school
-4,entreprise,entreprise,entreprise@gmail.com,$2y$10$11ct8Y/d0KX3AlM6pXaNO.vHV.H3q/y0WQFOUPVYo1XxLBNV3Z1F6,compagny
+4,entreprise,fghjk,sedfgthyjk@fghfgh,$2y$10$WRpBycCHdAgha/spV/LvUeaNsjX9nyWyhxQtSF6HoU6xc7JPQXKf2,user

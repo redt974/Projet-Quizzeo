@@ -115,7 +115,6 @@
             echo "</tbody>
                 </table>";
         } 
-
         // Fermer le fichier
         fclose($file);
     ?>

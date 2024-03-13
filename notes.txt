@@ -1,0 +1,9 @@
+Rôle Admin :
+    -> Visualisaion des données :
+        - Liste des utilisateurs
+        - Liste des utilisateurs connectés
+        - Liste des quiz créés
+        - Statut de chaque quiz (en cours / lancé / terminé)
+    -> Actions :
+        - Activer / Désactiver des comptes utilisateurs
+        - Activer / Désactiver des quiz
