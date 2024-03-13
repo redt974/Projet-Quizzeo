@@ -6,7 +6,7 @@
     <title>Accueil</title>
     <link rel="icon" href='./assets/quizzeo.ico' />
     <style>
-        @import url(https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap);@import url(https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap);
+        @import url(https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap);
         body {
             font-family: 'Poppins';
             width: 100%;
@@ -14,8 +14,21 @@
             flex-direction: column;
             align-items: center;
         }
+        .quiz{
+            background-color: #00B; 
+            color: white;
+            margin: 50px 0 0; 
+            padding: 15px 20px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: flex;
+            justify-content: center;
+            text-decoration: none;
+        }
 		table {
-            margin: 100px 0 0;
+            margin: 50px 0 0;
 			width: 70%;
 			border-collapse: collapse;
 		}
@@ -61,41 +74,50 @@
     </style>
 </head>
 <body>
-<?php
-    session_start();
-    if(!isset($_SESSION['email'])){
-        header('location: connexion.php');
-    } else {
+    <?php
+        session_start();
+        if(!isset($_SESSION['email'])){
+            header('location: connexion.php');
+        } else {
 
-        include './components/header.php';
-
+            include './components/header.php';
+        }
+    ?>
+    <a class="quiz" href="quiz.php">Add Quiz</a>
+    <?php
         // Ouvrir le fichier CSV en lecture
         $file = fopen('user_quiz.csv', 'r');
-        // Ignorer la première ligne
-        fgetcsv($file);
-        
-        // Afficher le tableau des quiz
-        echo "<table>
-                <thead>
-                    <tr>
-                        <th>User</th>
-                        <th>Titre</th>
-                        <th>Description</th>
-                    </tr>
-                </thead>
-            <tbody>";
-        while (($row = fgetcsv($file)) !== false) {
-            echo "<tr>
-                    <td>" .strtoupper($row[1]). "</td>
-                    <td>" .$row[2]. "</td>
-                    <td>" .$row[3]. "</td>
+
+        // Vérifier si le fichier contient des données 
+        if (($row = fgetcsv($file)) !== false) {
+            // Afficher le tableau des quiz
+            echo "<table>
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Titre</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                <tbody>";
+
+            // Vérifier si la ligne suivante contient des données
+            while (($row = fgetcsv($file)) !== false) {
+                if($row !== null){
+                    echo "<tr>
+                    <td>" . strtoupper($row[1]) . "</td>
+                    <td>" . $row[2] . "</td>
+                    <td>" . $row[3] . "</td>
                 </tr>";
+                } 
+            }
+
+            echo "</tbody>
+                </table>";
         } 
-        echo "</tbody>
-        </table>";
+
         // Fermer le fichier
         fclose($file);
-    }
-?>
+    ?>
 </body>
 </html>

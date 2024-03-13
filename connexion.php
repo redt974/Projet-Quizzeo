@@ -142,7 +142,7 @@
     <form action="connexion.php" method="post">
         <div class="form-group">
             <div class="label-input">
-                <label for="email">Addresse Mail :</label>
+                <label for="email">Adresse Mail :</label>
                 <input type="email" id="email" name="email" required>
             </div>
         </div>

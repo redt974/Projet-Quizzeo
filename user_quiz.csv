@@ -1,6 +1,3 @@
 id,name_user,titre,description
-1,test,"Quiz sur l'histoire de France","Ce quiz teste vos connaissances sur l'histoire de France."
-2,test1,"Quiz sur les mathématiques","Ce quiz teste vos connaissances en mathématiques."
-3,test,"Quiz sur la biologie","Ce quiz teste vos connaissances en biologie."
-4,test1,"Quiz sur la littérature française","Ce quiz teste vos connaissances sur la littérature française."
-5,test,"Quiz sur la géographie","Ce quiz teste vos connaissances en géographie."
+1,admin,"Découverte de la Science","Testez vos connaissances scientifiques avec ce quiz passionnant!"
+2,admin,"Histoire du Monde","Explorez les événements marquants de l'histoire mondiale avec ce quiz."
