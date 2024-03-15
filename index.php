@@ -81,7 +81,6 @@
             // Compteur pour suivre l'index de la diapositive
             $index = 0;
 
-<<<<<<< HEAD
         // Vérifier si le fichier contient des données 
         fgetcsv($file);
             // Vérifier si la ligne suivante contient des données
@@ -89,15 +88,6 @@
                 if ($row !== null) {
                     // Incrémenter l'index de la diapositive
                     $index++;
-=======
-            // Vérifier si le fichier contient des données 
-            if (($row = fgetcsv($file)) !== false) {
-                // Vérifier si la ligne suivante contient des données
-                while (($row = fgetcsv($file)) !== false) {
-                    if ($row !== null) {
-                        // Incrémenter l'index de la diapositive
-                        $index++;
->>>>>>> bdfbd5e4ec478b698c397c6d3663e45193488c05
 
                         // Vérifier si c'est la première diapositive, pour la marquer comme active
                         $active_class = ($index === 1) ? 'active' : '';
@@ -105,7 +95,6 @@
                         // Sélectionner l'image correspondante à l'index actuel
                         $image = isset($images[$index - 1]) ? $images[$index - 1] : '';
 
-<<<<<<< HEAD
                     // Afficher la diapositive du carousel avec les données du fichier CSV
                     echo "<div class='carousel-item $active_class'>
                             <img src='./assets/$image' class='d-block w-100' alt='Slide Image'>
@@ -121,23 +110,6 @@
 
         // Fermer le fichier
         fclose($file);
-=======
-                        // Afficher la diapositive du carousel avec les données du fichier CSV
-                        echo "<div class='carousel-item $active_class'>
-                                <img src='./assets/$image' class='d-block w-100' alt='Slide Image'>
-                                <div class='carousel-caption d-none d-md-block'>
-                                    <!-- Utilisez les données du fichier CSV pour le titre et la description -->
-                                    <h5>" . $row[2] . "</h5>
-                                    <p>" . $row[3] . "</p>
-                                    <button class='quiz game' onclick='startGame(" . $row[0]. ")'>Start</button> 
-                                </div>
-                            </div>";
-                    }
-                }
-            }
-            // Fermer le fichier
-            fclose($file);
->>>>>>> bdfbd5e4ec478b698c397c6d3663e45193488c05
         ?>
     </div>
     <!-- Boutons de contrôle -->
