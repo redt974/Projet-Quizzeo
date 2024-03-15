@@ -155,7 +155,7 @@
                 <select name="role" id="role">
                     <option value="user">Utilisateur standard</option>
                     <option value="school">Ecole</option>
-                    <option value="compagny">Entreprise</option>
+                    <option value="compagnie">Entreprise</option>
                 </select>
             </div>
         </div>
