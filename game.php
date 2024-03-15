@@ -11,7 +11,7 @@
     $quiz_id = $_POST['quiz_id'];
 
     // Charger les informations du quiz
-    $quiz_info = loadQuizInfo($quiz_id);
+    $quiz_info = loadQuiz($quiz_id);
 
     // Vérifier si le quiz existe
     if (!$quiz_info) {
@@ -58,7 +58,7 @@
         }
 
         // Vérifier si c'est la dernière question du quiz
-        if ($current_question_index == count($questions) - 1) {
+        if ($current_question_index == count($questions)-1) {
             // Afficher le bouton de soumission des résultats
             echo '<form action="game.php" method="post">';
             echo '<input type="hidden" name="quiz_id" value="' . $quiz_id . '">';
@@ -81,7 +81,7 @@
         // Vérifier chaque réponse sélectionnée par l'utilisateur
         foreach ($user_responses as $question_index => $selected_answer_id) {
             // Charger la réponse sélectionnée depuis le fichier CSV des réponses
-            $selected_answer = loadAnswerById($selected_answer_id);
+            $selected_answer = loadAnswer($selected_answer_id);
             // Vérifier si la réponse a été trouvée
             if ($selected_answer) {
                 $is_correct = $selected_answer[3]; // Indice 3 contient la valeur de l'attribut correct
@@ -93,17 +93,18 @@
 
         // Ajouter les résultats au fichier CSV
         addResultsToCSV($_SESSION['id'], $quiz_id, $results);
+        header('location: index.php');
         }
 
     // Fonction pour charger les informations du quiz depuis le fichier CSV
-    function loadQuizInfo($quiz_id) {
+    function loadQuiz($quiz_id) {
         $quiz_info = [];
         $quiz_file = 'user_quiz.csv';
         $file = fopen($quiz_file, 'r');
         if ($file) {
             while (($row = fgetcsv($file)) !== false) {
                 if ($row[0] == $quiz_id) {
-                    $quiz_info = $row; // Nous récupérons toutes les données du quiz
+                    $quiz_info = $row; 
                 }
             }
             fclose($file);
@@ -125,6 +126,7 @@
         }
         return $questions;
     }
+
     // Fonction pour charger les réponses depuis le fichier CSV
     function loadAnswers($question_id) {
         $answers = [];
@@ -133,37 +135,22 @@
         if ($file) {
             while (($row = fgetcsv($file)) !== false) {
                 if ($row[1] == $question_id) {
-                    $answers[] = $row; // Nous récupérons toutes les données de la réponse
+                    $answers[] = $row; 
                 }
             }
             fclose($file);
         }
         return $answers;
     }
-    // Fonction pour charger une réponse par son ID depuis le fichier CSV
-    function loadAnswerById($answer_id) {
-        $answer_file = 'user_quiz_answer.csv';
-        $file = fopen($answer_file, 'r');
-        if ($file) {
-            while (($row = fgetcsv($file)) !== false) {
-                if ($row[0] == $answer_id) {
-                    fclose($file);
-                    return $row; // Retourner la réponse trouvée
-                }
-            }
-            fclose($file);
-        }
-        return false; // Retourner false si la réponse n'est pas trouvée
-    }
 
     // Fonction pour obtenir le prochain ID pour les résultats
     function getNextResultId($result_file) {
-        // Initialiser l'ID à 1 s'il n'y a pas de résultats encore
+
         $next_id = 1;
-        // Vérifier si le fichier existe et s'il contient des données
+
         if (file_exists($result_file)) {
             $file = fopen($result_file, 'r');
-            // Lire chaque ligne du fichier pour trouver le dernier ID utilisé
+
             while (($row = fgetcsv($file)) !== false) {
                 $next_id++;
             }
@@ -175,16 +162,16 @@
     // Fonction pour ajouter les résultats dans le fichier CSV
     function addResultsToCSV($user_id, $quiz_id, $results) {
         $result_file = 'user_result_game.csv';
-        // Récupérer le prochain ID pour les résultats
+
         $next_id = getNextResultId($result_file);
-        // Obtenir la date actuelle
+
         $date = date('Y-m-d H:i:s');
-        // Ouvrir le fichier en mode ajout
+
         $file = fopen($result_file, 'a');
-        // Écrire les résultats dans le fichier CSV
+
         foreach ($results as $question_id => $result) {
             fputcsv($file, [$next_id, $user_id, $quiz_id, $question_id, $result, $date]);
-            $next_id++; // Incrémenter l'ID pour les résultats suivants
+            $next_id++; 
         }
         fclose($file);
     }
