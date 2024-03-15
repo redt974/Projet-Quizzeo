@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Game</title>
+    <link rel="icon" href='./assets/quizzeo.ico' />
 </head>
 <body>
 
@@ -20,7 +21,7 @@
         $result_file = 'user_result_game.csv';
 
         // Filtrer les questions par rapport à l'ID du quiz
-        $quiz_questions = array();
+        $quiz_questions = [];
         while(($row = fgetcsv($quiz_questions_file)) !== false) {
             if($row[1] == $quiz_id) {
                 $quiz_questions[] = $row;
@@ -28,7 +29,7 @@
         }
 
         // Tableau pour stocker les points de chaque question
-        $points_per_question = array();
+        $points = [];
 
         // Afficher le titre et la description du quiz
         while(($row = fgetcsv($quiz_info_file)) !== false) {
@@ -40,48 +41,54 @@
 
         // Calculer les points par question
         foreach($quiz_questions as $question) {
-            $points_per_question[$question[0]] = $question[3];
+            $points[$question[0]] = $question[3];
         }
+        
+        // Mélanger les questions
+        shuffle($quiz_questions);
 
-        // Afficher les questions du quiz
+        // Afficher les questions et réponses du quiz
+        echo "<form action='game.php' method='post'>";
         foreach($quiz_questions as $question) {
             echo "<h2>{$question[2]}</h2>";
-            echo "<form method='post'>";
-            // Ouvrir le fichier des réponses
+            // Mélanger les réponses pour chaque question
+            $answers = [];
             $quiz_answers_file = fopen('user_quiz_answer.csv', 'r');
             while(($answer = fgetcsv($quiz_answers_file)) !== false) {
                 if($answer[1] == $question[0]) {
-                    echo "<input type='radio' name='answer[{$question[0]}]' value='{$answer[2]}'>{$answer[2]}<br>";
+                    $answers[] = $answer;
                 }
             }
             fclose($quiz_answers_file);
-            echo "</form>";
+            shuffle($answers);
+            foreach ($answers as $answer) {
+                echo "<input type='radio' name='answer[{$question[0]}]' value='{$answer[0]}'>{$answer[2]}<br>";
+            }
         }
-
-        // Afficher le bouton de soumission après la dernière question
-        echo "<form action='game.php' method='post'>";
         echo "<input type='hidden' name='user_id' value='$user_id'>";
         echo "<input type='hidden' name='quiz_id' value='$quiz_id'>";
         echo "<input type='submit' name='submit' value='Soumettre'>";
         echo "</form>";
-        
+
         // Fermer les fichiers CSV
         fclose($quiz_questions_file);
         fclose($quiz_info_file);
-    } 
+    } else {
+        // Redirection vers la page index.php
+        header('location: index.php');
+    }
 
     // Traitement de la soumission du quiz
-    if(isset($_POST['submit']) && isset($_POST['answer'])) {
+    if(isset($_POST['submit'])) {
         $user_id = $_POST['user_id'];
         $quiz_id = $_POST['quiz_id'];
-        $date = date('Y-m-d H:i:s');
+        $date = date('Y-m-d H:i:s');      
 
-        $quiz_answers_file = fopen('user_quiz_answer.csv', 'r');
-        $total_score = 0;
-
-        $result_file_handle = fopen($result_file, 'a');
-        $result_lines = array();
+        // Trouver l'id du prochain résultat
+        $result_file_handle = fopen($result_file, 'r');
+        $result_lines = [];
         if($result_file_handle) {
+            fgetcsv($result_file_handle);
             while(($line = fgetcsv($result_file_handle)) !== false) {
                 $result_lines[] = $line;
             }
@@ -89,22 +96,32 @@
         } else {
             $last_id = 1;
         }
+        fclose($result_file_handle);
 
-        foreach ($_POST['answer'] as $question_id => $selected_answer) {
+        // Calcul du score des réponses sélectionnées 
+        $quiz_answers_file = fopen('user_quiz_answer.csv', 'r');
+        $total_score = 0;
+        foreach ($_POST['answer'] as $question_id => $selected_answer_id) {
             while(($answer = fgetcsv($quiz_answers_file)) !== false) {
-                if($answer[1] == $question_id && $answer[2] == $selected_answer) {
-                    $total_score += $answer[3] * $points_per_question[$question_id];
+                if($answer[1] == $question_id && $answer[0] == $selected_answer_id) {
+                    $total_score += $answer[3] * $points[$question_id];
                 }
             }
+            // Réinitialiser le pointeur du fichier après chaque boucle pour revenir au début
+            fseek($quiz_answers_file, 0);
         }
-
         fclose($quiz_answers_file);
-        $result_line = array($last_id, $user_id, $quiz_id, $total_score, $date);
+
+        // Sauvegarder le résultat dans le fichier csv 'user_result_game.csv'
+        $result_file_handle = fopen($result_file, 'a');
+        $result_line = [$last_id, $user_id, $quiz_id, $total_score, $date,'en cours'];
         fputcsv($result_file_handle, $result_line);
         fclose($result_file_handle);
 
-        echo "Quiz soumis avec succès! Score total: $total_score";
+        // Redirection sur la page index.php
+        header('location: index.php');
     }
+
 ?>
 
 </body>
