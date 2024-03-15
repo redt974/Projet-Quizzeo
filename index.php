@@ -77,7 +77,7 @@
         $index = 0;
 
         // Vérifier si le fichier contient des données 
-        if (($row = fgetcsv($file)) !== false) {
+        fgetcsv($file);
             // Vérifier si la ligne suivante contient des données
             while (($row = fgetcsv($file)) !== false) {
                 if ($row !== null) {
@@ -97,11 +97,12 @@
                                 <!-- Utilisez les données du fichier CSV pour le titre et la description -->
                                 <h5>" . $row[2] . "</h5>
                                 <p>" . $row[3] . "</p>
+                                <button class='quiz game' onclick='startGame(" . $row[0] . ")'>Start</button>
                             </div>
                         </div>";
                 }
             }
-        }
+
         // Fermer le fichier
         fclose($file);
         ?>
