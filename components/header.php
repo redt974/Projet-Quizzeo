@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/style/header.css"/>
+    <link rel="stylesheet" href="./style/header.css">
     <script defer src="https://kit.fontawesome.com/b32d44622b.js" crossorigin="anonymous"></script>
 </head>
 <body>
