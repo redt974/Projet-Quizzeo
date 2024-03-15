@@ -196,7 +196,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $quiz_info[2]; ?></title>
-    <link rel="stylesheet" href=./style/game.css">
+    <link rel="stylesheet" href="./style/game.css">
 </head>
 <body>
     <div class="quiz-container">
