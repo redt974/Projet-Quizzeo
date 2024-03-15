@@ -149,3 +149,43 @@ top: 0;
 bottom: 0;
 z-index: -1;
 }
+
+@import url(https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap);
+
+body {
+    font-family: 'Poppins', Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    min-height: 100vh; /* Utilisation de la hauteur minimale de la vue pour remplacer la hauteur fixe */
+    width: 100%;
+    color: #000000;
+    backdrop-filter: blur(10px);
+    overflow-x: hidden;
+}
+
+h1 {
+    text-align: center;
+    font-size: 4vw; /* Utilisation de la taille de la police en pourcentage de la largeur de l'écran */
+    margin: 2vw 0; /* Utilisation de marges en pourcentage */
+}
+
+form {
+    padding: 4vw; /* Utilisation de rem pour le rembourrage */
+    background-color: rgba(255, 255, 255, 0.4);
+    border-radius: 4vw; /* Utilisation de rem pour le rayon du bord */
+    box-shadow: 0 2vw 5vw rgba(0, 0, 0, 0.4); /* Utilisation de rem pour l'ombre */
+    margin-bottom: 4vw; /* Utilisation de marges en pourcentage */
+    width: 80%; /* Utilisation de pourcentage pour la largeur */
+    max-width: 600px; /* Utilisation de max-width pour limiter la largeur */
+}
+
+/* Ajout d'une règle pour les petits écrans */
+@media screen and (max-width: 768px) {
+    form {
+        width: 90%; /* Ajustement de la largeur pour les petits écrans */
+    }
+}
+
+/* Autres styles... */
