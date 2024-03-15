@@ -48,7 +48,7 @@
         include './components/header.php';
     ?>
     <video id="background-video" autoplay loop muted>
-        <source src="./assets/background4.webm">
+        <source src="./assets/background.mp4">
     </video>
     <h1>Connexion</h1>
     <form action="connexion.php" method="post">
