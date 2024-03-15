@@ -196,23 +196,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $quiz_info[2]; ?></title>
-    <style>
-        .quiz-container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        .question {
-            font-size: 18px;
-            margin-bottom: 15px;
-        }
-        .answer {
-            display: block;
-            margin-bottom: 10px;
-        }
-    </style>
+    <link rel="stylesheet" href=./style/game.css">
 </head>
 <body>
     <div class="quiz-container">
