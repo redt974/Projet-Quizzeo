@@ -1,3 +1,6 @@
+<<<<<<< HEAD
+id,id_question,answer
+=======
 id,id_question,answer,correct
 1,1,"H2O",1
 2,1,"CO2",0
@@ -10,3 +13,4 @@ id,id_question,answer,correct
 9,5,Kobe,0
 10,5,Gol D. Roger,1
 11,6,Amine,1
+>>>>>>> main
