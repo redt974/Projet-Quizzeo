@@ -17,13 +17,6 @@
         }
         include './components/header.php';
     ?>
-        <?php else if($_SESSION['role'] == "admin") : ?>
-        <?php else if($_SESSION['role'] == "school" || $_SESSION['role'] == "company") : ?>
-        <?php endif;?>
-        <?php else if($_SESSION['role'] == "school") : ?>
-        <?php else if($_SESSION['role'] == "company") : ?>
-        <?php else : ?>
-
     <video id="background-video" autoplay loop muted>
         <source src="./assets/background6.mp4">
     </video>
