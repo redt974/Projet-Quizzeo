@@ -166,8 +166,6 @@
             var answerForm = button.parentElement;
             answerForm.parentElement.removeChild(answerForm);
         }
-
-
     </script>
 </body>
 </html>
