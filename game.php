@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Game</title>
     <link rel="icon" href='./assets/quizzeo.ico' />
+    <link rel="stylesheet" href='./style/game.css' />
+    <script defer src="https://kit.fontawesome.com/b32d44622b.js" crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -30,6 +32,12 @@
 
         // Tableau pour stocker les points de chaque question
         $points = [];
+
+        // Bouton de sortie du jeu
+        echo '            
+        <a href="./index.php">
+            <p class="exit">Exit<i class="fa-solid fa-arrow-right" style="color: #ffffff;"></i></p>
+        </a>';
 
         // Afficher le titre et la description du quiz
         while(($row = fgetcsv($quiz_info_file)) !== false) {
@@ -57,7 +65,6 @@
         echo "<form action='game.php' method='post'>";
         foreach($quiz_questions as $question) {
             echo "<h2>{$question[2]}</h2>";
-            // Mélanger les réponses pour chaque question
             $answers = [];
             $quiz_answers_file = fopen('user_quiz_answer.csv', 'r');
             while(($answer = fgetcsv($quiz_answers_file)) !== false) {
@@ -66,9 +73,10 @@
                 }
             }
             fclose($quiz_answers_file);
-            // shuffle($answers);
+            // Mélanger les réponses pour chaque question
+            shuffle($answers);
             foreach ($answers as $answer) {
-                echo "<input type='checkbox' name='answer[{$question[0]}]' value='{$answer[0]}'>{$answer[2]}<br>";
+                echo "<input type='checkbox' name='answer[{$question[0]}][]' value='{$answer[0]}'>{$answer[2]}<br>";
             }
         }
         echo "<input type='hidden' name='user_id' value='$user_id'>";
@@ -109,10 +117,10 @@
         foreach ($_POST['answer'] as $question_id => $selected_answer_ids) {
             // Variables pour le comptage des réponses correctes et incorrectes sélectionnées par l'utilisateur
             $selected_answers = 0;
-
+        
             // Variables pour stocker le nombre total de réponses correctes et incorrectes pour la question actuelle
             $total_correct_answers = 0;
-
+        
             // Récupération des réponses correctes et incorrectes pour la question actuelle
             $answers = [];
             $quiz_answers_file = fopen('user_quiz_answer.csv', 'r');
@@ -125,12 +133,12 @@
                 }
             }
             fclose($quiz_answers_file);
-
+        
             // Vérifier si l'utilisateur a sélectionné au moins une réponse pour cette question
             if (!is_array($selected_answer_ids)) {
                 $selected_answer_ids = array($selected_answer_ids);
             }
-
+        
             // Vérification des réponses sélectionnées par l'utilisateur
             foreach ($answers as $answer) {
                 if (in_array($answer[0], $selected_answer_ids)) {
@@ -141,7 +149,7 @@
                     }
                 }
             }
-
+        
             // Calcul du score pour la question actuelle
             if($selected_answers == $total_correct_answers) {
                 // Toutes les bonnes réponses ont été sélectionnées et aucune réponse incorrecte n'a été sélectionnée
@@ -150,7 +158,7 @@
                 // Calcul de la moyenne du nombre de réponses correctes sélectionnées par le joueur
                 $score_obtenu += $selected_answers / $total_correct_answers * $points[$question_id];
             }
-        }
+        }        
 
         // Sauvegarder le résultat dans le fichier csv 'user_result_game.csv'
         $result_file_handle = fopen($result_file, 'a');

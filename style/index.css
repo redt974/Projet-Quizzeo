@@ -1,164 +1,12 @@
 @import url(https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap);
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-around;
-            height: 100%;
-            width:100%;
-            color: #000000; 
-            backdrop-filter: blur(10px);
-            overflow-x: hidden;
-        }
-        h1 {
-            text-align: center;
-            font-size: 56px;
-            margin: 16px 0;
-
-        }
-        form {
-            padding: 20px;
-            background-color: rgba(255,255,255,0.4); 
-            border-radius: 20px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
-            margin-bottom: 20px;
-            width: 35%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            height: 25%;
-
-        }
-        .form-group {
-            margin: 20px 0;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .label-input {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-
-        }
-
-        option{
-            width: 300px;
-        }
-        label {
-            display: block;
-            font-size: 20px;
-            font-weight: 600;
-            width: 300px; 
-        }
-        input[type="text"],
-        input[type="email"],
-        input[type="password"], 
-        select{
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 13px;
-            width: 100%;
-        }
-        input[type="submit"], .inscription {
-            background-color: #EC9593;
-            color: white;
-            padding: 15px 20px;
-            border: none;
-            border-radius: 13px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            display: flex;
-            justify-content: center;
-            text-decoration: none;
-        }
-        input[type="submit"]:hover {
-            background-color: #adbce6;
-
-        }
-        .switch-page{
-            margin-bottom: 50px;
-        }
-        .g-recaptcha{
-            margin: 20px 0;
-        }
-        ::-webkit-scrollbar{
-            width: 12px;
-            height: 12px;
-        }
-
-        ::-webkit-scrollbar-track{
-            background: none;
-        }
-
-        ::-webkit-scrollbar-thumb{
-            background-color: #DCDCDC;
-            border-radius: 12px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover{
-            background-color: #C0C0C0;
-            border-radius: 12px;
-        }
-
-        ::-webkit-scrollbar-corner{
-            background: none;
-
-        }
-        @keyframes typing {
-            from { width: 0 }
-            to { width: 100% }
-        }
-        @keyframes bounce {
-    0%, 20%, 50%, 80%, 100% {
-        transform: translateY(0); /* Début et fin de l'animation : pas de déplacement vertical */
-    }
-    40% {
-        transform: translateY(-30px); /* Déplacement vers le haut */
-    }
-    60% {
-        transform: translateY(-15px); /* Rebond en bas */
-    } }
-/* Style pour le titre h1 */
-    /* Style pour le titre h1 */
-    h1 {
-        color: white;
-        text-align: center;
-        font-size: 56px;
-        overflow: hidden; /* Cela assure que le texte reste dans la boîte délimitée */
-        white-space: nowrap; /* Empêche le saut de ligne */
-        animation: typing 8s steps(10000) forwards; /* Animation de saisie de texte */
-    }
-    h2 {
-        color: white;
-        animation-name: bounce; /* Nom de l'animation */
-        animation-duration: 2s; /* Durée de l'animation */
-        animation-iteration-count: infinite; /* Répétition infinie de l'animation */
-    }
-
-#background-video {
-height: 100%;
-width: 100%;
-object-fit: cover;
-position: fixed;
-left: 0;
-right: 0;
-top: 0;
-bottom: 0;
-z-index: -1;
-}
-
-@import url(https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap);
 
 body {
-    font-family: 'Poppins', Arial, sans-serif;
+    font-family: Arial, sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
-    min-height: 100vh; /* Utilisation de la hauteur minimale de la vue pour remplacer la hauteur fixe */
+    height: 100%;
     width: 100%;
     color: #000000;
     backdrop-filter: blur(10px);
@@ -167,25 +15,159 @@ body {
 
 h1 {
     text-align: center;
-    font-size: 4vw; /* Utilisation de la taille de la police en pourcentage de la largeur de l'écran */
-    margin: 2vw 0; /* Utilisation de marges en pourcentage */
+    font-size: 56px;
+    margin: 16px 0;
+
 }
 
 form {
-    padding: 4vw; /* Utilisation de rem pour le rembourrage */
+    padding: 20px;
     background-color: rgba(255, 255, 255, 0.4);
-    border-radius: 4vw; /* Utilisation de rem pour le rayon du bord */
-    box-shadow: 0 2vw 5vw rgba(0, 0, 0, 0.4); /* Utilisation de rem pour l'ombre */
-    margin-bottom: 4vw; /* Utilisation de marges en pourcentage */
-    width: 80%; /* Utilisation de pourcentage pour la largeur */
-    max-width: 600px; /* Utilisation de max-width pour limiter la largeur */
+    border-radius: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+    margin-bottom: 20px;
+    width: 35%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 25%;
+
 }
 
-/* Ajout d'une règle pour les petits écrans */
-@media screen and (max-width: 768px) {
-    form {
-        width: 90%; /* Ajustement de la largeur pour les petits écrans */
+.form-group {
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.label-input {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+}
+
+option {
+    width: 300px;
+}
+
+label {
+    display: block;
+    font-size: 20px;
+    font-weight: 600;
+    width: 300px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 13px;
+    width: 100%;
+}
+
+input[type="submit"],
+.inscription {
+    background-color: #EC9593;
+    color: white;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 13px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: flex;
+    justify-content: center;
+    text-decoration: none;
+}
+
+input[type="submit"]:hover {
+    background-color: #adbce6;
+
+}
+
+.switch-page {
+    margin-bottom: 50px;
+}
+
+.g-recaptcha {
+    margin: 20px 0;
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: none;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #DCDCDC;
+    border-radius: 12px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #C0C0C0;
+    border-radius: 12px;
+}
+
+::-webkit-scrollbar-corner {
+    background: none;
+
+}
+
+@keyframes typing {
+    from {
+        width: 0
+    }
+    to {
+        width: 100%
     }
 }
 
-/* Autres styles... */
+@keyframes bounce {
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-30px);
+    }
+    60% {
+        transform: translateY(-15px);
+    }
+}
+h1 {
+    color: white;
+    text-align: center;
+    font-size: 56px;
+    overflow: hidden;
+    white-space: nowrap;
+    animation: typing 8s steps(10000) forwards;
+}
+
+h2 {
+    color: white;
+    animation-name: bounce;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+}
+
+#background-video {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: -1;
+}
