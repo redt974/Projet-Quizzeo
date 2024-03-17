@@ -39,9 +39,15 @@
             }
         }
 
-        // Calculer les points par question
+        // Récupération des points par question
         foreach($quiz_questions as $question) {
             $points[$question[0]] = $question[3];
+        }
+
+        // Calculer le barème du quiz
+        $note_max = 0;
+        foreach($quiz_questions as $question) {
+            $note_max += $question[3];
         }
         
         // Mélanger les questions
@@ -60,9 +66,9 @@
                 }
             }
             fclose($quiz_answers_file);
-            shuffle($answers);
+            // shuffle($answers);
             foreach ($answers as $answer) {
-                echo "<input type='radio' name='answer[{$question[0]}]' value='{$answer[0]}'>{$answer[2]}<br>";
+                echo "<input type='checkbox' name='answer[{$question[0]}]' value='{$answer[0]}'>{$answer[2]}<br>";
             }
         }
         echo "<input type='hidden' name='user_id' value='$user_id'>";
@@ -99,22 +105,56 @@
         fclose($result_file_handle);
 
         // Calcul du score des réponses sélectionnées 
-        $quiz_answers_file = fopen('user_quiz_answer.csv', 'r');
-        $total_score = 0;
-        foreach ($_POST['answer'] as $question_id => $selected_answer_id) {
+        $score_obtenu = 0;
+        foreach ($_POST['answer'] as $question_id => $selected_answer_ids) {
+            // Variables pour le comptage des réponses correctes et incorrectes sélectionnées par l'utilisateur
+            $selected_answers = 0;
+
+            // Variables pour stocker le nombre total de réponses correctes et incorrectes pour la question actuelle
+            $total_correct_answers = 0;
+
+            // Récupération des réponses correctes et incorrectes pour la question actuelle
+            $answers = [];
+            $quiz_answers_file = fopen('user_quiz_answer.csv', 'r');
             while(($answer = fgetcsv($quiz_answers_file)) !== false) {
-                if($answer[1] == $question_id && $answer[0] == $selected_answer_id) {
-                    $total_score += $answer[3] * $points[$question_id];
+                if($answer[1] == $question_id) {
+                    $answers[] = $answer;
+                    if($answer[3] == 1) {
+                        $total_correct_answers += 1;
+                    } 
                 }
             }
-            // Réinitialiser le pointeur du fichier après chaque boucle pour revenir au début
-            fseek($quiz_answers_file, 0);
+            fclose($quiz_answers_file);
+
+            // Vérifier si l'utilisateur a sélectionné au moins une réponse pour cette question
+            if (!is_array($selected_answer_ids)) {
+                $selected_answer_ids = array($selected_answer_ids);
+            }
+
+            // Vérification des réponses sélectionnées par l'utilisateur
+            foreach ($answers as $answer) {
+                if (in_array($answer[0], $selected_answer_ids)) {
+                    if ($answer[3] == 1) {
+                        $selected_answers += 1;
+                    } else {
+                        $selected_answers -= 1;
+                    }
+                }
+            }
+
+            // Calcul du score pour la question actuelle
+            if($selected_answers == $total_correct_answers) {
+                // Toutes les bonnes réponses ont été sélectionnées et aucune réponse incorrecte n'a été sélectionnée
+                $score_obtenu += $points[$question_id];
+            } else if($selected_answers > 0) {
+                // Calcul de la moyenne du nombre de réponses correctes sélectionnées par le joueur
+                $score_obtenu += $selected_answers / $total_correct_answers * $points[$question_id];
+            }
         }
-        fclose($quiz_answers_file);
 
         // Sauvegarder le résultat dans le fichier csv 'user_result_game.csv'
         $result_file_handle = fopen($result_file, 'a');
-        $result_line = [$last_id, $user_id, $quiz_id, $total_score, $date,'en cours'];
+        $result_line = [$last_id, $user_id, $quiz_id, $score_obtenu, $note_max, $date,'en cours'];
         fputcsv($result_file_handle, $result_line);
         fclose($result_file_handle);
 

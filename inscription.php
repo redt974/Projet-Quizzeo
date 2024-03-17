@@ -3,6 +3,7 @@
 
     // Check if the form has been submitted
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
         // Retrieve form data
         $fname = $_POST["fname"];
         $lname = $_POST["lname"];
@@ -10,12 +11,17 @@
         $password = $_POST["password"];
         $role = $_POST["role"];
 
+        // Validate email using regular expression
+        $emailPattern = '/^[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]{2,4}$/';
+        if (!preg_match($emailPattern, $email)) {
+            echo "L'adresse email est invalide !";
+        }
+
         // Validate password using regular expression
-        // $passwordPattern = "/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/";
-        // if (!preg_match($passwordPattern, $password)) {
-        //     echo "Password must be at least 8 characters long and include one uppercase letter, one lowercase letter, one digit, and one special character.";
-        //     exit();
-        // }
+        $passwordPattern = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@$!%*#?&])[A-Za-z0-9@$!%*#?&]{8,}$/';
+        if (!preg_match($passwordPattern, $password)) {
+            echo "Votre mot de passe doit avoir une longueur minimale de 8 caractères. Votre mot de passe doit contenir au moins une lettre minuscule, une lettre majuscule, un chiffre, un caractère spécial parmi @$!%*#?&";
+        }
 
         // Read existing users from CSV file
         $file_name = "utilisateurs.csv";
@@ -23,7 +29,6 @@
         // Check if the user already exists
         if (userExists($file_name, $email)) {
             echo "User already exists!";
-            exit();
         }
 
         // Determine the next available user ID
@@ -36,7 +41,7 @@
         $file = fopen($file_name, "a");
 
         if ($file !== false) {
-            fputcsv($file, [$nextUserId, $fname, $lname, $email, $hashedPassword, $role]);
+            fputcsv($file, [$nextUserId, $fname, $lname, $email, $hashedPassword, $role, "connected", "activate"]);
             fclose($file);
 
             // Create a session for the new user
@@ -44,15 +49,11 @@
             $_SESSION["prenom"] = $fname;
             $_SESSION["email"] = $email; 
             $_SESSION["role"] = $role;
-
-            echo "Registration successful!";
+            $_SESSION["status"] = "connected";
+            $_SESSION["activate"] = "activate";
 
             // Redirect to index.php
             header("Location: index.php");
-            exit();
-        } else {
-            echo "Error writing user data.";
-            exit();
         }
     }
 
@@ -90,7 +91,8 @@
         return $nextUserId + 1;
     }
 
-    if(!empty($_POST['g-recaptcha-response']) && isset($_POST['g-recaptcha-response'])) {
+    // Captcha Authentification
+    if(!empty($_POST['g-recaptcha-response']) || isset($_POST['g-recaptcha-response'])) {
         $secret="6LddDpUpAAAAANaKWBH05GUoOVS75h6qje2JEEKv";
         
         $data=json_decode($response);
@@ -155,7 +157,7 @@
                 <select name="role" id="role">
                     <option value="user">Utilisateur standard</option>
                     <option value="school">Ecole</option>
-                    <option value="compagny">Entreprise</option>
+                    <option value="company">Entreprise</option>
                 </select>
             </div>
         </div>

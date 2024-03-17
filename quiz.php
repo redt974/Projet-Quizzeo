@@ -74,15 +74,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Création de Quiz</title>
     <script defer src="https://kit.fontawesome.com/b32d44622b.js" crossorigin="anonymous"></script>
+    <link rel="icon" href='./assets/quizzeo.ico' />
     <link rel="stylesheet" href="./style/quiz.css">
 </head>
 <body>
     <?php 
-        if(!isset($_SESSION['email'])){
-            header('location: connexion.php');
-        } else {
-
+        if ($_SESSION['role'] == 'school' || $_SESSION['role'] == 'company') {
             include './components/header.php';
+        } else {
+            header('location: index.php');
         }
     ?>
     <form action="quiz.php" method="post">
@@ -166,8 +166,6 @@
             var answerForm = button.parentElement;
             answerForm.parentElement.removeChild(answerForm);
         }
-
-
     </script>
 </body>
 </html>

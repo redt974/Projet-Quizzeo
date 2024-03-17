@@ -1,38 +1,51 @@
 <?php
-    session_start();
+session_start();
 
-    // Check if the form has been submitted
+// Check if the form has been submitted
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Retrieve form data
         $email = $_POST["email"];
         $password = $_POST["password"];
 
         // Check if the user exists and password is correct
-        $file = fopen("utilisateurs.csv", "r");  // Use "r" for read mode
+        $file = fopen("utilisateurs.csv", "r"); // Mode read and write
 
         if ($file !== false) {
+            $donnees = []; 
             while (($user = fgetcsv($file)) !== false) {
-                if ($user[3] === $email && password_verify($password, $user[4])) {
-                    // Login successful, save in the session the email and id
-                    $_SESSION["email"] = $email;
-                    $_SESSION["prenom"] = $user[1];
+                if ($user[3] === $email && password_verify($password, $user[4]) && $user[7] == 'activate') {
+
                     $_SESSION["id"] = $user[0];
+                    $_SESSION["prenom"] = $user[1];
+                    $_SESSION["email"] = $email;
+                    $_SESSION["role"] = $user[5];
+                    $_SESSION["status"] = "connected"; 
+                    $_SESSION["activate"] = $user[7];
 
-                    echo "Login successful!";
-
-                    // Redirect to index.php
-                    header("Location: index.php");
-                    exit();
+                    // Modification du status de l'utilisateur
+                    $user[6] = "connected";
                 }
+                $donnees[] = $user;
             }
-            fclose($file);  // Close the file after reading
-            // If login fails
-            echo "Invalid email or password.";
-        } else {
-            echo "Error reading user data.";
-        }
-    }
+    
+            // Fermer le fichier
+            fclose($file);
 
+            // Ouvrir le fichier en mode écriture
+            if (($file = fopen("utilisateurs.csv", "w")) !== false) { // Mode écritue
+                // Écrire les données modifiées dans le fichier
+                foreach ($donnees as $ligne) {
+                    fputcsv($file, $ligne);
+                }
+
+                // Fermer le fichier
+                fclose($file);
+            }        
+        
+            // Redirect to index.php
+            header("Location: index.php");
+        }
+    } 
 ?>
 <!DOCTYPE html>
 <html lang="en">
