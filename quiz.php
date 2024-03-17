@@ -79,10 +79,10 @@
 </head>
 <body>
     <?php 
-        if ($_SESSION['role'] !== 'school' || $_SESSION['role'] !== 'company') {
-            header('location: index.php');
-        } else {
+        if ($_SESSION['role'] == 'school' || $_SESSION['role'] == 'company') {
             include './components/header.php';
+        } else {
+            header('location: index.php');
         }
     ?>
     <form action="quiz.php" method="post">

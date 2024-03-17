@@ -11,6 +11,9 @@
 <body>
 
 <?php
+
+    session_start();
+
     include './components/header.php';
 
     // Vérifier si les identifiants de l'utilisateur et du quiz sont passés en POST
