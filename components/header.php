@@ -8,8 +8,11 @@
 </head>
 <body>
     <nav> 
-        <img class="quizzeo-logo" src="./assets/quizzeo.png" alt="quizzeo-logo" />
-        <?php             
+        <a href="./preview.php">
+            <img class="quizzeo-logo" src="./assets/quizzeo.png" alt="quizzeo-logo" />
+        </a>
+        <?php
+            // Afficher le lien de connexion ou de déconnexion en fonction de la session
             if(isset($_SESSION['email'])) {
                 echo "<a href='./logout.php' class='jaune'><div class='logout'><i class='fa-solid fa-arrow-right-from-bracket'></i></div></a>";
             } else {
@@ -17,5 +20,6 @@
             }
         ?>
     </nav>
+
 </body>
 </html>

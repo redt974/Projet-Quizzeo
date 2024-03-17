@@ -71,12 +71,16 @@
 			</div>
 		</div>
 	</div>
-    <form action="connexion.php">
-    <input type="submit" value="Y ALLER">
-    </form>
-
-
-
+	<?php
+		// Vérifiez si vous êtes sur la page preview.php
+		$is_preview_page = strpos($_SERVER['REQUEST_URI'], 'preview.php') !== false;
+		// Afficher le lien de retour à la page précédente si vous êtes sur preview.php
+		if ($is_preview_page) {
+			echo '<form action="javascript:history.go(-1)">    
+					<input type="submit" value="Retour">
+				  </form>';
+		}
+	?>
 	<div class="app__bg">
 		<div class="app__bg__image current--image">
 			<img src="./assets/standarduser.jpg" alt="" />

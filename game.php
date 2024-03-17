@@ -11,6 +11,8 @@
 <body>
 
 <?php
+    include './components/header.php';
+
     // Vérifier si les identifiants de l'utilisateur et du quiz sont passés en POST
     if(isset($_POST['user_id']) && isset($_POST['quiz_id'])) {
         $user_id = $_POST['user_id'];
