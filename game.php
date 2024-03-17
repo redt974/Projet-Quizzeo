@@ -66,7 +66,7 @@
                 }
             }
             fclose($quiz_answers_file);
-            shuffle($answers);
+            // shuffle($answers);
             foreach ($answers as $answer) {
                 echo "<input type='checkbox' name='answer[{$question[0]}]' value='{$answer[0]}'>{$answer[2]}<br>";
             }
@@ -114,14 +114,14 @@
             $total_correct_answers = 0;
 
             // Récupération des réponses correctes et incorrectes pour la question actuelle
-            $answers = array();
+            $answers = [];
             $quiz_answers_file = fopen('user_quiz_answer.csv', 'r');
             while(($answer = fgetcsv($quiz_answers_file)) !== false) {
                 if($answer[1] == $question_id) {
                     $answers[] = $answer;
                     if($answer[3] == 1) {
                         $total_correct_answers += 1;
-                    }
+                    } 
                 }
             }
             fclose($quiz_answers_file);
@@ -136,6 +136,8 @@
                 if (in_array($answer[0], $selected_answer_ids)) {
                     if ($answer[3] == 1) {
                         $selected_answers += 1;
+                    } else {
+                        $selected_answers -= 1;
                     }
                 }
             }
