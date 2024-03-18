@@ -47,6 +47,7 @@
             // Create a session for the new user
             $_SESSION["id"] = $nextUserId;
             $_SESSION["prenom"] = $fname;
+            $_SESSION["nom"] = $lname;
             $_SESSION["email"] = $email; 
             $_SESSION["role"] = $role;
             $_SESSION["status"] = "connected";
