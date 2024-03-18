@@ -12,13 +12,38 @@
             <img class="quizzeo-logo" src="./assets/quizzeo.png" alt="quizzeo-logo" />
         </a>
         <?php
-            // Afficher le lien de connexion ou de déconnexion en fonction de la session
-            if(isset($_SESSION['email'])) {
-                echo "<a href='./logout.php' class='jaune'><div class='logout'><i class='fa-solid fa-arrow-right-from-bracket'></i></div></a>";
-            } else {
-                echo '<a href="./connexion.php" class="jaune" '.(basename($_SERVER['PHP_SELF']) == 'connexion.php'  ? 'class="active"' : '').'><div class="user"><i class="fa-solid fa-user fa-lg"></i></div></a>';
-            }
-        ?>
+if(isset($_SESSION['email'])) {
+    $currentPage = basename($_SERVER['PHP_SELF']);
+    
+    echo '<a href="#" class="jaune" id="userDropdown"><div class="user"><i class="fa-solid fa-user fa-lg"></i></div></a>';
+    echo '<div id="dropdownContent" style="display:none;">';
+    if ($currentPage == 'utilisateur.php') {
+        echo '<a href="./logout.php">Se déconnecter</a>';
+        echo '<a href="./index.php">Retour à l\'accueil</a>';
+    } else {
+        echo '<a href="./logout.php">Se déconnecter</a>';
+        echo '<a href="./utilisateur.php">Profil</a>';
+    }
+    echo '</div>';
+}
+?>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var dropdown = document.getElementById('userDropdown');
+    var dropdownContent = document.getElementById('dropdownContent');
+
+    dropdown.addEventListener('click', function() {
+        if (dropdownContent.style.display === "none") {
+            dropdownContent.style.display = "block";
+        } else {
+            dropdownContent.style.display = "none";
+        }
+    });
+});
+</script>
+
     </nav>
 
 </body>

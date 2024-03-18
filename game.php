@@ -167,7 +167,7 @@
 
         // Sauvegarder le résultat dans le fichier csv 'user_result_game.csv'
         $result_file_handle = fopen($result_file, 'a');
-        $result_line = [$last_id, $user_id, $quiz_id, $score_obtenu, $note_max, $date,'en cours'];
+        $result_line = [$last_id, $user_id, $quiz_id, $score_obtenu, $note_max, $date,'terminé'];
         fputcsv($result_file_handle, $result_line);
         fclose($result_file_handle);
 
