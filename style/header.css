@@ -61,10 +61,6 @@ nav a:hover {
     background-color:#FFCF85 ;
     transition: 0.3s;
 }
-nav a.active {
-    background-color:#00B ;
-}
-
 .user {
     border: 2px solid #000;
     border-radius: 25px;

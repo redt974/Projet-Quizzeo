@@ -170,16 +170,7 @@
         <div class="g-recaptcha" data-sitekey="6LddDpUpAAAAAAeUvhSEb5l_fT8u29IGVWA40sFh"></div>
         <div id="captchaError"></div>
 
-        <script defer>
-            function validateForm() {             
-                var captchaResponse = grecaptcha.getResponse();             
-                while (captchaResponse == "") {                 
-                    document.getElementById("captchaError").innerHTML = "<h4>Veuillez compléter le reCAPTCHA.</h4>";
-                    return false;             
-                }             
-                return true; 
-            } 
-        </script>
+        <script defer src="./script/inscription.js"></script>
         <input type="submit" value="Inscription">
     </form>
     <div class="switch-page">

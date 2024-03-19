@@ -1,19 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Accueil</title>
     <link rel="icon" href='./assets/quizzeo.ico' />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="./style/index.css">
 </head>
-
 <body>
     <?php
     session_start();
@@ -150,7 +145,8 @@
                         </thead>
                         <tbody>";
         while (($row = fgetcsv($file)) !== false) {
-            echo "<tr>
+            if ($row !== false) {
+                echo "<tr>
                         <td>" . $row[2] . "</td>
                         <td>" . $row[3] . "</td>
                         <td>• " . $row[5] . "</td>
@@ -162,11 +158,14 @@
                             </form>
                         </td>
                     </tr>";
-        }
-        echo "</tbody>
+            } else {
+                echo "<div>Aucun quiz n'a été trouvé ! Revenez plus tard !</div>";
+            }
+            echo "</tbody>
             </table><br/><br/><br/><br/><br/><br/>";
-        // Fermer le fichier
-        fclose($file);
+            // Fermer le fichier
+            fclose($file);
+        }
     }
     ?>
     <?php if ($_SESSION['role'] == 'school' || $_SESSION['role'] == 'company'): ?>
@@ -225,25 +224,25 @@
         }
 
         // Tableau des quiz :
-
-        function nombreResult($id_quiz){
+    
+        function nombreResult($id_quiz) {
             $nb_result = 0;
 
             // Ouvrir le fichier CSV en lecture
             $file = fopen('user_result_game.csv', 'r');
             // Ignorer la première ligne
             fgetcsv($file);
-    
+
             while (($row = fgetcsv($file)) !== false) {
                 if ($id_quiz === $row[2]) {
                     $nb_result += 1;
                 }
             }
-            
+
             fclose($file);
             return $nb_result;
         }
-    
+
         // Ouvrir le fichier CSV en lecture
         $file = fopen('user_quiz.csv', 'r');
         // Ignorer la première ligne
@@ -278,6 +277,8 @@
                         </form>
                         </td>
                     </tr>";
+            } else if ($row == false) {
+                echo "<div>Vous n'avez pas encore créer de quiz ! Faites-en un dès maintenant !</div>";
             }
         }
         echo "</tbody>
@@ -287,29 +288,109 @@
         ?>
     <?php endif; ?>
     <?php if ($_SESSION['role'] == 'user'): ?>
-        <div class="container">
-            <div class="slide">
-                <?php
-                // Tableau des URLs des images
-                $image_urls = [
-                    "https://i.ibb.co/qCkd9jS/img1.jpg",
-                    "https://i.ibb.co/jrRb11q/img2.jpg",
-                    "https://i.ibb.co/NSwVv8D/img3.jpg",
-                    "https://i.ibb.co/Bq4Q0M8/img4.jpg",
-                    "https://img.freepik.com/premium-photo/lakes_972708-78.jpg?size=626&ext=jpg&ga=GA1.1.735520172.1710288000&semt=ais"
-                ];
+        <?php
+        // Tableau de vos quiz terminés:
+    
+        function quizTitre($id_quiz)
+        {
+            $quiz_titre = "";
 
-                // Ouvrir le fichier CSV en lecture
-                $file = fopen('user_quiz.csv', 'r');
+            // Ouvrir le fichier CSV en lecture
+            $file = fopen('user_quiz.csv', 'r');
+            // Ignorer la première ligne
+            fgetcsv($file);
 
-                // Index de l'image à utiliser
-                $image_index = 0;
+            while (($row = fgetcsv($file)) !== false) {
+                if ($id_quiz === $row[1]) {
+                    $quiz_titre = $row[2];
+                }
+            }
 
-                // Vérifier si le fichier contient des données 
-                fgetcsv($file);
+            fclose($file);
+            return $quiz_titre;
+        }
 
+        // Ouvrir le fichier CSV en lecture
+        $file = fopen('user_result_game.csv', 'r');
+        // Ignorer la première ligne
+        fgetcsv($file);
+
+        if (($row = fgetcsv($file)) !== false) {
+            fclose($file);
+
+            // Ouvrir le fichier CSV en lecture
+            $file = fopen('user_result_game.csv', 'r');
+            // Ignorer la première ligne
+            fgetcsv($file);
+            // Afficher le tableau des quiz
+            echo "<br/><br/><br/><br/><br/><br/>
+                    <h1 class='table_down'>Tableau de vos Quiz terminés :</h1>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Titre</th>
+                                <th>Résultat</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                            </thead>
+                            <tbody>";
+            while (($row = fgetcsv($file)) !== false) {
+                if ($_SESSION['id'] === $row[1]) {
+                    echo "<tr>
+                                <td>" . quizTitre($row[2]) . "</td>
+                                <td>" . $row[3] . "/" . $row[4] . "</td>
+                                <td>" . $row[5] . "</td>
+                                <td>" . $row[6] . "</td>
+                            </tr>";
+                }
+            } 
+            echo "</tbody>
+                    </table><br/><br/><br/><br/><br/><br/>";
+            // Fermer le fichier
+            fclose($file);
+        } else {
+            fclose($file);
+        }
+        // Slider des quiz :
+
+        // Ouvrir le fichier CSV en lecture
+        $file = fopen('user_quiz.csv', 'r');
+        // Ignorer la première ligne
+        fgetcsv($file);
+
+        if (($row = fgetcsv($file)) !== false) {
+            fclose($file);
+
+            echo '<div class="container">
+            <div class="slide">';
+
+            // Tableau des URLs des images
+            $image_urls = [
+                "https://i.ibb.co/qCkd9jS/img1.jpg",
+                "https://i.ibb.co/jrRb11q/img2.jpg",
+                "https://i.ibb.co/NSwVv8D/img3.jpg",
+                "https://i.ibb.co/Bq4Q0M8/img4.jpg",
+                "https://img.freepik.com/premium-photo/lakes_972708-78.jpg?size=626&ext=jpg&ga=GA1.1.735520172.1710288000&semt=ais"
+            ];
+
+            // Ouvrir le fichier CSV en lecture
+            $file = fopen('user_quiz.csv', 'r');
+
+            // Index de l'image à utiliser
+            $image_index = 0;
+
+            // Vérifier si le fichier contient des données 
+            fgetcsv($file);
+
+            while (($row = fgetcsv($file)) !== false) {
+                // Gestion du cas où il y a un quiz sur le slider
+                $name = $row[2];
+                $description = $row[3];
+                $id = $row[0];
+                $image = $row[4];
                 // Boucler à travers les lignes du fichier CSV
-                while (($row = fgetcsv($file)) !== false) {
+                if (($row = fgetcsv($file)) !== false) {
                     if ($row !== null) {
                         if ($row[6] == 'active') {
                             // Récupérer l'URL de l'image ou utiliser l'URL correspondante dans le tableau $image_urls
@@ -317,7 +398,7 @@
 
                             // Afficher la diapositive du carousel avec les données du fichier CSV
                             echo "<div class='item' style='background-image: url(" . $image_url . ");'>
-                        <div class='content' style='text-align: center;'>
+                                    <div class='content' style='text-align: center;'>
                                     <div class='name'>" . $row[2] . "</div>
                                     <div class='des'>" . $row[3] . "</div>
                                     <button class='game' onclick='startGame(" . $row[0] . ")' style='margin: 0 auto;'>Start</button>";
@@ -333,97 +414,52 @@
                             }
                         }
                     }
-                }
-
-                // Fermer le fichier
-                fclose($file);
-
-        // Tableau de vos quiz terminés:
-
-        function quizTitre($id_quiz) {
-            $quiz_titre = "";
-
-            // Ouvrir le fichier CSV en lecture
-            $file = fopen('user_quiz.csv', 'r');
-            // Ignorer la première ligne
-            fgetcsv($file);
+                } else {
+                    // Récupérer l'URL de l'image ou utiliser l'URL correspondante dans le tableau $image_urls
+                    $image_url = !empty ($image) ? $image : $image_urls[$image_index];
     
-            while (($row = fgetcsv($file)) !== false) {
-                if ($id_quiz === $row[1]) {
-                    $quiz_titre = $row[2];
+                    // Afficher la diapositive du carousel avec les données du fichier CSV
+                    echo "<div class='item' style='background-image: url(" . $image_url . ");'>
+                            <div class='content' style='text-align: center; display: block'/>
+                            <div class='name'>" . $name . "</div>
+                            <div class='des'>" . $description . "</div>
+                            <button class='game' onclick='startGame(" . $id . ")' style='margin: 0 auto;'>Start</button>";
+    
+                    echo "</div>
+                    </div>";
+
+                    // Incrémenter l'index pour la prochaine itération
+                    $image_index++;
+                    // Si l'index dépasse la taille du tableau, réinitialiser à zéro
+                    if ($image_index >= count($image_urls)) {
+                        $image_index = 0;
+                    }
                 }
             }
-            
+
+            // Fermer le fichier
             fclose($file);
-            return $quiz_titre;
-        }
-    
-        // Ouvrir le fichier CSV en lecture
-        $file = fopen('user_result_game.csv', 'r');
-        // Ignorer la première ligne
-        fgetcsv($file);
 
-        // id,id_user,id_quiz,résultat,barème,date,status
-
-        // Afficher le tableau des quiz
-        echo "<br/><br/><br/><br/><br/><br/>
-            <h1 class='table_down'>Tableau de vos Quiz :</h1>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Titre</th>
-                        <th>Résultat</th>
-                        <th>Date</th>
-                        <th>Status</th>
-                    </tr>
-                    </thead>
-                    <tbody>";
-        while (($row = fgetcsv($file)) !== false) {
-            if ($_SESSION['id'] === $row[1]) {
-                echo "<tr>
-                        <td>" . quizTitre($row[2]) . "</td>
-                        <td>" . $row[3] . "/". $row[4]."</td>
-                        <td>" . $row[5] = date('h \h i \m s \s') . "</td>
-                        <td>" . $row[6] . "</td>
-                    </tr>";
-            }
-        }
-        echo "</tbody>
-            </table><br/><br/><br/><br/><br/><br/>";
-        // Fermer le fichier
-        fclose($file);
-
-                ?>
-            </div>
+            echo '</div>
             <div class="button">
                 <button class="prev"><i class="fa-solid fa-arrow-left"></i></button>
                 <button class="next"><i class="fa-solid fa-arrow-right"></i></button>
             </div>
-        </div>
-        <!-- Formulaire masqué pour envoyer les informations du quiz en méthode post -->
-        <form id="gameForm" action="game.php" method="post" style="display: none;">
-            <input type="hidden" name="quiz_id" id="quiz_id">
-            <input type="hidden" name="user_id" value="<?php echo $_SESSION['id']; ?>">
-        </form>
-        <script>
-            function startGame(quizId) {
-                document.getElementById('quiz_id').value = quizId;
-                document.getElementById('gameForm').submit();
-            }
+            </div>
 
-            let next = document.querySelector('.next')
-            let prev = document.querySelector('.prev')
+            <!-- Formulaire masqué pour envoyer les informations du quiz en méthode post -->
+            <form id="gameForm" action="game.php" method="post" style="display: none;">
+                <input type="hidden" name="quiz_id" id="quiz_id">
+                <input type="hidden" name="user_id" value="' . $_SESSION['id'] . '">
+            </form>';
 
-            next.addEventListener('click', function () {
-                let items = document.querySelectorAll('.item')
-                document.querySelector('.slide').appendChild(items[0])
-            })
+        } else {
+            fclose($file);
+            echo "<h2>Aucun quiz n'a été trouvé ! Revenez plus tard !</h2>";
+        }
+        ?>
 
-            prev.addEventListener('click', function () {
-                let items = document.querySelectorAll('.item')
-                document.querySelector('.slide').prepend(items[items.length - 1]) // here the length of items = 6
-            })
-        </script>
+        <script src="./script/index.js"></script>
     <?php endif; ?>
 </body>
 
