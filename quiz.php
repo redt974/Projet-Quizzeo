@@ -5,11 +5,79 @@
         // Collecte des données du formulaire
         $quizTitle = $_POST['quizTitle'];
         $quizDescription = $_POST['quizDescription'];
+
+            // Check if image file is selected
+            if(isset($_FILES["image"]["name"])) {
+                $target_dir = "uploads/"; // Directory where you want to store the uploaded images
+                $image_name = uniqid() . '_' . basename($_FILES["image"]["name"]); // Generate unique filename
+                $target_file = $target_dir . $image_name;
+        
+                 // Vérifie si le fichier est une image réelle ou une fausse image
+    $check = getimagesize($_FILES["image"]["tmp_name"]);
+    if($check !== false) {
+        // Déplace le fichier téléchargé vers le répertoire cible
+        if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
+            echo "Le fichier ". htmlspecialchars(basename( $_FILES["image"]["name"])). " a été téléchargé avec succès.";
+        } else {
+            echo "Désolé, une erreur s'est produite lors du téléchargement de votre fichier.";
+        }
+    } else {
+        echo "Le fichier n'est pas une image.";
+    }
+   
+
+        // Check if image file is a actual image or fake image
+        $check = getimagesize($_FILES["image"]["tmp_name"]);
+        if($check !== false) {
+            echo "File is an image - " . $check["mime"] . ".";
+            $uploadOk = 1;
+        } else {
+            echo "File is not an image.";
+            $uploadOk = 0;
+        }
+
+        // Check if file already exists
+        if (file_exists($target_file)) {
+            echo "Sorry, file already exists.";
+            $uploadOk = 0;
+        }
+
+        // Check file size
+        if ($_FILES["image"]["size"] > 500000) {
+            echo "Sorry, your file is too large.";
+            $uploadOk = 0;
+        }
+
+        // Allow only certain file formats
+        if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+        && $imageFileType != "gif" ) {
+            echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+            $uploadOk = 0;
+        }
+
+        // Check if $uploadOk is set to 0 by an error
+        if ($uploadOk == 0) {
+            echo "Sorry, your file was not uploaded.";
+        } else {
+            // If everything is ok, try to upload file
+            if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
+                echo "The file ". basename( $_FILES["image"]["name"]). " has been uploaded.";
+            } else {
+                echo "Sorry, there was an error uploading your file.";
+            }
+        }
+        $image = $target_file;
+    } else {
+        $image = '';
+    }
+
+            
+
         $id = $_SESSION['id'];
 
         // Insertion dans le fichier user_quiz.csv
         $userQuizFile = 'user_quiz.csv';
-        $userQuizData = [getNextQuizId($userQuizFile), $id, $quizTitle, $quizDescription, "url_image", "en cours", "active"];
+        $userQuizData = [getNextQuizId($userQuizFile), $id, $quizTitle, $quizDescription, $image, "en cours", "active"];
         insertIntoCSV($userQuizFile, $userQuizData);
 
         // Obtention de l'ID du dernier quiz inséré
@@ -85,6 +153,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Création de Quiz</title>
     <script defer src="https://kit.fontawesome.com/b32d44622b.js" crossorigin="anonymous"></script>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="icon" href='./assets/quizzeo.ico' />
     <link rel="stylesheet" href="./style/quiz.css">
 </head>
@@ -96,30 +165,44 @@
             header('location: index.php');
         }
     ?>
-    <form action="quiz.php" method="post">
-        <div class='quiz-titre'>
-            <h1>Création de Quiz</h1>    
-            <a href='./index.php'>
-                <p class="exit">Exit<i class="fa-solid fa-arrow-right" style="color: #ffffff;"></i></p>
-            </a>
+<form action="quiz.php" method="post" enctype="multipart/form-data">
+    <div class='quiz-titre'>
+        <h1>Création de Quiz</h1>    
+        <a href='./index.php'>
+            <p class="exit">Exit<i class="fa-solid fa-arrow-right" style="color: #ffffff;"></i></p>
+        </a>
+    </div>
+    <label for="quizTitle">Titre du Quiz :</label>
+    <input type="text" id="quizTitle" name="quizTitle" required>
+
+    <label for="quizDescription">Description du Quiz :</label>
+    <textarea id="quizDescription" name="quizDescription" rows="4" required></textarea>
+
+    <div id="questionsContainer"></div>
+
+    <button type="button" onclick="addQuestion()">Ajouter une question</button>
+    <?php 
+        if ($_SESSION['role'] == 'company') {
+            echo '<button type="button" onclick="addQuestionWithFreeResponse()">Ajouter une question avec une réponse libre</button>';
+        } 
+    ?>
+    <div class="container-img">
+        <!-- Hidden file input -->
+        <input type="file" name="image" id="file" style="display: none;">
+
+        <div class="img-area">
+            <i class='bx bx-upload icon'></i>
+            <h2>Importer des images</h2>
+            <p>L'image doit peser moins de <span>2Mb</span></p>
         </div>
-        <label for="quizTitle">Titre du Quiz :</label>
-        <input type="text" id="quizTitle" name="quizTitle" required>
+        <!-- Button to trigger file input -->
+        <button type="button" class="select-image" onclick="document.getElementById('image').click();">Sélectionner Image</button>
+    </div>
 
-        <label for="quizDescription">Description du Quiz :</label>
-        <textarea id="quizDescription" name="quizDescription" rows="4" required></textarea>
+    <button type="submit">Enregistrer le Quiz</button>
+</form>
 
-        <div id="questionsContainer"></div>
-
-        <button type="button" onclick="addQuestion()">Ajouter une question</button>
-        <?php 
-            if ($_SESSION['role'] == 'company') {
-                echo '<button type="button" onclick="addQuestionWithFreeResponse()">Ajouter une question avec une réponse libre</button>';
-            } 
-        ?>
-
-        <button type="submit">Enregistrer le Quiz</button>
-    </form>
+    <script defer src="./script/script.js"></script>
 
     <script>
         // Fonction pour ajouter une nouvelle question
