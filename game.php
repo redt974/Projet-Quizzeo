@@ -26,6 +26,7 @@
         $quiz_answers_file = fopen('user_quiz_answer.csv', 'r');
         $quiz_info_file = fopen('user_quiz.csv', 'r');
         $result_file = 'user_result_game.csv';
+        $free_answer_file = 'user_quiz_free_answer.csv';
 
         // Filtrer les questions par rapport à l'ID du quiz
         $quiz_questions = [];
@@ -39,10 +40,8 @@
         $points = [];
 
         // Bouton de sortie du jeu
-        echo '            
-        <a href="./index.php">
-            <p class="exit">Exit<i class="fa-solid fa-arrow-right" style="color: #ffffff;"></i></p>
-        </a>';
+        echo "<form method='post'><input type='submit' name='save_and_exit' value='Enregistrer et Quitter'></form>";
+
 
         // Afficher le titre et la description du quiz
         while(($row = fgetcsv($quiz_info_file)) !== false) {
@@ -70,18 +69,23 @@
         echo "<form action='game.php' method='post'>";
         foreach($quiz_questions as $question) {
             echo "<h2>{$question[2]}</h2>";
-            $answers = [];
-            $quiz_answers_file = fopen('user_quiz_answer.csv', 'r');
-            while(($answer = fgetcsv($quiz_answers_file)) !== false) {
-                if($answer[1] == $question[0]) {
-                    $answers[] = $answer;
+            // Vérifier si la question est à réponse libre
+            if ($question[4] == 'libre') {
+                echo "<input type='text' name='free_answer[{$question[0]}]' required><br>";
+            } else {
+                $answers = [];
+                $quiz_answers_file = fopen('user_quiz_answer.csv', 'r');
+                while(($answer = fgetcsv($quiz_answers_file)) !== false) {
+                    if($answer[1] == $question[0]) {
+                        $answers[] = $answer;
+                    }
                 }
-            }
-            fclose($quiz_answers_file);
-            // Mélanger les réponses pour chaque question
-            shuffle($answers);
-            foreach ($answers as $answer) {
-                echo "<input type='checkbox' name='answer[{$question[0]}][]' value='{$answer[0]}'>{$answer[2]}<br>";
+                fclose($quiz_answers_file);
+                // Mélanger les réponses pour chaque question
+                shuffle($answers);
+                foreach ($answers as $answer) {
+                    echo "<input type='checkbox' name='answer[{$question[0]}][]' value='{$answer[0]}'>{$answer[2]}<br>";
+                }
             }
         }
         echo "<input type='hidden' name='user_id' value='$user_id'>";
@@ -103,19 +107,22 @@
         $quiz_id = $_POST['quiz_id'];
         $date = date('Y-m-d H:i:s');      
 
-        // Trouver l'id du prochain résultat
-        $result_file_handle = fopen($result_file, 'r');
-        $result_lines = [];
-        if($result_file_handle) {
-            fgetcsv($result_file_handle);
-            while(($line = fgetcsv($result_file_handle)) !== false) {
-                $result_lines[] = $line;
+        // Trouver l'id du prochain résultat ou réponse libre
+        function getNextId($file_name){
+            $file_name_handle = fopen($file_name, 'r');
+            $result_lines = [];
+            if($file_name_handle) {
+                fgetcsv($file_name_handle);
+                while(($line = fgetcsv($file_name_handle)) !== false) {
+                    $result_lines[] = $line;
+                }
+                $last_id = count($result_lines) + 1;
+            } else {
+                $last_id = 1;
             }
-            $last_id = count($result_lines) + 1;
-        } else {
-            $last_id = 1;
+            fclose($file_name_handle);
+            return $last_id;
         }
-        fclose($result_file_handle);
 
         // Calcul du score des réponses sélectionnées 
         $score_obtenu = 0;
@@ -149,7 +156,7 @@
                 if (in_array($answer[0], $selected_answer_ids)) {
                     if ($answer[3] == 1) {
                         $selected_answers += 1;
-                    } else {
+                    } else if ($answer[3] == 0){
                         $selected_answers -= 1;
                     }
                 }
@@ -163,19 +170,35 @@
                 // Calcul de la moyenne du nombre de réponses correctes sélectionnées par le joueur
                 $score_obtenu += $selected_answers / $total_correct_answers * $points[$question_id];
             }
-        }        
+        }      
+        
+        // Sauvegarder le résultat libre dans le fichier csv 'user_quiz_free_answer.csv'
+        if(isset($_POST['free_answer'])) {
+            foreach ($_POST['free_answer'] as $question_id => $free_answer) {
+                $free_answer_file_handle = fopen($free_answer_file, 'a');
+                $free_answer_line = [getNextId($free_answer_file), $user_id, $quiz_id, $question_id, $free_answer, $date,'terminé'];
+                fputcsv($free_answer_file_handle, $free_answer_line);
+                fclose($free_answer_file_handle);
+            }
+        }
 
         // Sauvegarder le résultat dans le fichier csv 'user_result_game.csv'
         $result_file_handle = fopen($result_file, 'a');
-        $result_line = [$last_id, $user_id, $quiz_id, $score_obtenu, $note_max, $date,'terminé'];
+        $result_line = [getNextId($result_file), $user_id, $quiz_id, $score_obtenu, $note_max, $date,'terminé'];
         fputcsv($result_file_handle, $result_line);
         fclose($result_file_handle);
 
-        // Redirection sur la page index.php
-        header('location: index.php');
+        if(isset($_POST['submit'])) {
+            // Redirection sur la page index.php si Soumettre est cliqué
+            // header('location: index.php');
+        } elseif(isset($_POST['save_and_exit'])) {
+            // Redirection vers une page de confirmation ou d'accueil si Enregistrer et Quitter est cliqué
+            // header('location: quiz_save.php');
+        }
     }
+    
+    ?>
 
-?>
 
 </body>
 </html>

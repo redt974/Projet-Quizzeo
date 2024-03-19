@@ -9,7 +9,7 @@
 
         // Insertion dans le fichier user_quiz.csv
         $userQuizFile = 'user_quiz.csv';
-        $userQuizData = [getNextQuizId($userQuizFile), $id, $quizTitle, $quizDescription];
+        $userQuizData = [getNextQuizId($userQuizFile), $id, $quizTitle, $quizDescription, "url_image", "en cours", "active"];
         insertIntoCSV($userQuizFile, $userQuizData);
 
         // Obtention de l'ID du dernier quiz inséré
@@ -36,6 +36,16 @@
                         insertIntoCSV($userQuizAnswerFile, $answerData);
                     }
                 }
+            }
+        }
+
+        // Insertion des questions à réponse libre
+        $freeQuestions = $_POST['free-questions'];
+        if (isset($freeQuestions)) {
+            $userQuizQuestionFile = 'user_quiz_question.csv';
+            foreach ($freeQuestions as $freeQuestion) {
+                $questionData = [getNextQuizId($userQuizQuestionFile), $lastQuizId, $freeQuestion, -1, 'libre'];
+                insertIntoCSV($userQuizQuestionFile, $questionData);
             }
         }
 
@@ -66,6 +76,7 @@
         return $nextId + 1;
     }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -101,6 +112,11 @@
         <div id="questionsContainer"></div>
 
         <button type="button" onclick="addQuestion()">Ajouter une question</button>
+        <?php 
+            if ($_SESSION['role'] == 'company') {
+                echo '<button type="button" onclick="addQuestionWithFreeResponse()">Ajouter une question avec une réponse libre</button>';
+            } 
+        ?>
 
         <button type="submit">Enregistrer le Quiz</button>
     </form>
@@ -128,25 +144,29 @@
 
         // Fonction pour ajouter une nouvelle réponse à une question
         function addAnswer(button) {
-            var answersContainer = button.previousSibling;
-            var answerForms = answersContainer.getElementsByTagName('form');
+            var answersContainer = button.previousSibling; // Sélectionner le conteneur de réponses de la question
+            var answerForms = answersContainer.getElementsByClassName('answerForm'); // Sélectionner les champs de réponse spécifiques à la question
 
             // Vérifier si le nombre de réponses est inférieur à 4 avant d'ajouter une nouvelle réponse
             if (answerForms.length < 4) {
                 var questionIndex = answersContainer.parentElement.querySelector('input').value; // Index de la question
                 var answerForm = document.createElement('div');
                 answerForm.classList.add('form');
+                answerForm.classList.add('answerForm'); // Ajouter la classe spécifique
                 answerForm.innerHTML = '<label for="answers">Réponse :</label>' +
-                                        '<input type="text" name="answers[' + questionIndex + '][]" required>' +
-                                        '<label for="correct">Correct :</label>' +
-                                        '<select name="correct[' + questionIndex + '][]">' +
-                                        '<option value="1">Oui</option>' +
-                                        '<option value="0">Non</option>' +
-                                        '</select>' +
-                                        '<button type="button" onclick="removeAnswer(this)">Supprimer la Réponse</button>' +
-                                        '<br>';
+                    '<input type="text" name="answers[' + questionIndex + '][]" required>' +
+                    '<label for="correct">Correct :</label>' +
+                    '<select name="correct[' + questionIndex + '][]">' +
+                    '<option value="1">Oui</option>' +
+                    '<option value="0">Non</option>' +
+                    '</select>' +
+                    '<button type="button" onclick="removeAnswer(this)">Supprimer la Réponse</button>' +
+                    '<br>';
 
                 answersContainer.appendChild(answerForm);
+
+                // Mettre à jour l'index de la question
+                updateQuestionIndex(answersContainer.parentElement, questionIndex);
 
                 // Masquer le bouton d'ajout si la limite est atteinte
                 if (answerForms.length === 4) {
@@ -154,6 +174,29 @@
                 }
             }
         }
+
+
+        // Fonction pour mettre à jour l'index de la question
+        function updateQuestionIndex(questionContainer, newIndex) {
+            var questionInput = questionContainer.querySelector('input[name="points"]');
+            questionInput.value = newIndex;
+        }
+
+        // Fonction pour ajouter une nouvelle question avec une réponse libre
+        function addQuestionWithFreeResponse() {
+            var container = document.getElementById('questionsContainer');
+            var questionIndex = container.children.length + 1; // Index de la question
+
+            var questionForm = document.createElement('div');
+            questionForm.classList.add('form');
+            questionForm.innerHTML = '<label for="free-question">Nom de la Question :</label>' +
+                '<input type="text" name="free-questions[]" required>'+
+                '<br>'+
+                '<button type="button" onclick="removeQuestion(this)">Supprimer la Question</button>'+
+                '<br>';
+            container.appendChild(questionForm);
+        }
+
 
         // Fonction pour supprimer une question
         function removeQuestion(button) {

@@ -13,7 +13,7 @@ session_start();
         if ($file !== false) {
             $donnees = []; 
             while (($user = fgetcsv($file)) !== false) {
-                if ($user[3] === $email && password_verify($password, $user[4]) && $user[7] == 'activate') {
+                if ($user[3] === $email && password_verify($password, $user[4]) && $user[7] == 'active') {
                     $_SESSION["id"] = $user[0];
                     $_SESSION["prenom"] = $user[1];
                     $_SESSION["nom"] = $user[2];

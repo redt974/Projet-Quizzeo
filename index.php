@@ -26,13 +26,76 @@
         <source src="./assets/background6.mp4">
     </video>
     <?php
-        if ($_SESSION['role'] == 'admin'){
+        // Fonction pour activer ou désactiver un utilisateur dans le fichier CSV
+        function toggleStatus($file_name, $id, $column) {
+            // Ouvrir le fichier en mode lecture
+            if (($file = fopen($file_name, "r")) !== false) { // Mode lecture
+                // Tableau pour stocker les données du fichier
+                $donnees = [];
+
+                // Lire chaque ligne du fichier
+                while (($user = fgetcsv($file)) !== false) {
+                    $user[$column] = ($id === $user[0] && $user[$column] == 'active') ? 'desactive' : 'active';
+
+                    // Ajouter la ligne au tableau de données
+                    $donnees[] = $user;
+                }
+
+                // Fermer le fichier
+                fclose($file);
+
+                // Ouvrir le fichier en mode écriture
+                if (($file = fopen($file_name, "w")) !== false) { // Mode écritue
+                    // Écrire les données modifiées dans le fichier
+                    foreach ($donnees as $ligne) {
+                        fputcsv($file, $ligne);
+                    }
+
+                    // Fermer le fichier
+                    fclose($file);
+                }
+            }
+        }
+
+        // Vérifier si un utilisateur a été sélectionné pour activer ou désactiver
+        if (isset($_POST['user_id']) && isset($_POST['active_user'])) {
+            // Récupérer l'ID de l'utilisateur et l'action à effectuer depuis le formulaire
+            $user_id = $_POST['user_id'];
+            $action = $_POST['active_user'];
+
+            // Effectuer l'action en fonction du bouton cliqué
+            if ($action === 'Activer') {
+                toggleStatus('utilisateurs.csv', $user_id, 7);
+            } elseif ($action === 'Désactiver') {
+                toggleStatus('utilisateurs.csv', $user_id, 7);
+            }
+        }
+
+        // Vérifier si un quiz a été sélectionné pour activer ou désactiver
+        if (isset($_POST['quiz_id']) && isset($_POST['active_quiz'])) {
+            // Récupérer l'ID de l'utilisateur et l'action à effectuer depuis le formulaire
+            $quiz_id = $_POST['quiz_id'];
+            $action = $_POST['active_quiz'];
+
+            // Effectuer l'action en fonction du bouton cliqué
+            if ($action === 'Activer') {
+                toggleStatus('user_quiz.csv', $quiz_id, 6);
+            } elseif ($action === 'Désactiver') {
+                toggleStatus('user_quiz.csv', $quiz_id, 6);
+            }
+        
+        }
+
+        // Afficher le tableau des utilisateurs avec les boutons dynamiques pour activer ou désactiver chaque compte
+        if ($_SESSION['role'] == 'admin') {
+            // Tableau des utilisateurs :
+
             // Ouvrir le fichier CSV en lecture
             $file = fopen('utilisateurs.csv', 'r');
             // Ignorer la première ligne
             fgetcsv($file);
 
-            // Afficher le tableau des utilisateurs 
+            // Afficher le tableau des utilisateurs
             echo "<br/><br/><br/><br/><br/><br/>
             <h1>Tableau des utilisateurs :</h1>
             <table>
@@ -47,24 +110,69 @@
                         </thead>
                         <tbody>";
             while (($row = fgetcsv($file)) !== false) {
+                if ($row[5] != "admin") {
+                    echo "<tr>
+                            <td>{$row[1]}</td>
+                            <td>" . strtoupper($row[2]) . "</td>
+                            <td>" . strtoupper($row[5]) . "</td>
+                            <td>• " . strtoupper($row[6]) . "</td>
+                            <td>
+                                <form method='post'>
+                                    <input type='hidden' name='user_id' value='{$row[0]}'>
+                                    <input type='submit' name='active_user' value='" . ($row[7] == 'active' ? 'Désactiver' : 'Activer') . "'>
+                                </form>
+                            </td>
+                        </tr>";
+                }
+            }
+            echo "</tbody>
+            </table><br/><br/><br/><br/><br/><br/>";
+            // Fermer le fichier
+            fclose($file);
+
+            // Tableau des quiz :
+
+            // Ouvrir le fichier CSV en lecture
+            $file = fopen('user_quiz.csv', 'r');
+            // Ignorer la première ligne
+            fgetcsv($file);
+
+            // Afficher le tableau des quiz
+            echo "<br/><br/><br/><br/><br/><br/>
+            <h1>Tableau des Quiz :</h1>
+            <table>
+                    <thead>
+                        <tr>
+                            <th>Titre</th>
+                            <th>Description</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>";
+            while (($row = fgetcsv($file)) !== false) {
                 echo "<tr>
-                        <td>" .$row[1]. "</td>
-                        <td>" .strtoupper($row[2]). "</td>
-                        <td>" .strtoupper($row[5]). "</td>
-                        <td>• " .strtoupper($row[6]). "</td>
-                        <td><button>Active</button></td>
+                        <td>" . $row[2] . "</td>
+                        <td>" . $row[3] . "</td>
+                        <td>• " . $row[5] . "</td>
+                        <td>
+                            <form method='post'>
+                                <input type='hidden' name='quiz_id' value='{$row[0]}'>
+                                <input type='submit' name='active_quiz' value='" . ($row[6] == 'active' ? 'Désactiver' : 'Activer') . "'>
+                            </form>
+                        </td>
                     </tr>";
-            } 
+            }
             echo "</tbody>
             </table><br/><br/><br/><br/><br/><br/>";
             // Fermer le fichier
             fclose($file);
         }
-    ?>
+        ?>
     <?php if ($_SESSION['role'] == 'school' || $_SESSION['role'] == 'company') : ?>
     <a class="quiz" href="quiz.php">Add Quiz</a>
     <?php endif; ?>
-    <?php if ($_SESSION['role'] == 'user' || $_SESSION['role'] == 'admin') : ?>
+    <?php if ($_SESSION['role'] == 'user') : ?>
     <div class="container">
         <div class="slide">
             <?php
@@ -96,10 +204,9 @@
                         echo "<div class='item' style='background-image: url(" . $image_url . ");'>
                                 <div class='content'>
                                     <div class='name'>" . $row[2] . "</div>
-                                    <div class='des'>" . $row[3] . "</div>";
-                        if ($_SESSION['role'] == 'user'){
-                            echo "<button class='game' onclick='startGame(" . $row[0] . ")'>Start</button>";
-                        }
+                                    <div class='des'>" . $row[3] . "</div>
+                                    <button class='game' onclick='startGame(" . $row[0] . ")'>Start</button>";
+                        
                         echo "</div>
                             </div>";
 
@@ -121,7 +228,6 @@
             <button class="next"><i class="fa-solid fa-arrow-right"></i></button>
         </div>
     </div>
-    <?php if ($_SESSION['role'] == 'user') : ?>
         <!-- Formulaire masqué pour envoyer les informations du quiz en méthode post -->
         <form id="gameForm" action="game.php" method="post" style="display: none;">
             <input type="hidden" name="quiz_id" id="quiz_id">
@@ -132,67 +238,20 @@
                 document.getElementById('quiz_id').value = quizId;
                 document.getElementById('gameForm').submit();
             }
-        </script>
-    <?php endif; ?>
-    <script>
-        let next = document.querySelector('.next')
-        let prev = document.querySelector('.prev')
 
-        next.addEventListener('click', function () {
-            let items = document.querySelectorAll('.item')
-            document.querySelector('.slide').appendChild(items[0])
-        })
+            let next = document.querySelector('.next')
+            let prev = document.querySelector('.prev')
 
-        prev.addEventListener('click', function () {
-            let items = document.querySelectorAll('.item')
-            document.querySelector('.slide').prepend(items[items.length - 1]) // here the length of items = 6
-        })
+            next.addEventListener('click', function () {
+                let items = document.querySelectorAll('.item')
+                document.querySelector('.slide').appendChild(items[0])
+            })
+
+            prev.addEventListener('click', function () {
+                let items = document.querySelectorAll('.item')
+                document.querySelector('.slide').prepend(items[items.length - 1]) // here the length of items = 6
+            })
     </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <?php if ($_SESSION['role'] == 'user') : ?>
-    <!-- Formulaire masqué pour envoyer les informations du quiz en méthode post -->
-    <form id="gameForm" action="game.php" method="post" style="display: none;">
-        <input type="hidden" name="quiz_id" id="quiz_id">
-        <input type="hidden" name="user_id" value="<?php echo $_SESSION['id']; ?>">
-    </form>
-    <script>
-        function startGame(quizId) {
-            document.getElementById('quiz_id').value = quizId;
-            document.getElementById('gameForm').submit();
-        }
-    </script>
-    <?php endif; ?>
-
     <?php endif; ?>
 </body>
 

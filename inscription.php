@@ -41,7 +41,7 @@
         $file = fopen($file_name, "a");
 
         if ($file !== false) {
-            fputcsv($file, [$nextUserId, $fname, $lname, $email, $hashedPassword, $role, "connected", "activate"]);
+            fputcsv($file, [$nextUserId, $fname, $lname, $email, $hashedPassword, $role, "connected", "active"]);
             fclose($file);
 
             // Create a session for the new user
@@ -51,7 +51,7 @@
             $_SESSION["email"] = $email; 
             $_SESSION["role"] = $role;
             $_SESSION["status"] = "connected";
-            $_SESSION["activate"] = "activate";
+            $_SESSION["activate"] = "active";
 
             // Redirect to index.php
             header("Location: index.php");
