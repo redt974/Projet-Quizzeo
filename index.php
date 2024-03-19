@@ -205,7 +205,7 @@
                                 <div class='content'>
                                     <div class='name'>" . $row[2] . "</div>
                                     <div class='des'>" . $row[3] . "</div>
-                                    <button class='game' onclick='startGame(" . $row[0] . ")'>Start</button>";
+                                    <button class='game' onclick='startGame(" . $row[0] . ")' style='margin: 0 auto;'>Start</button>";
                         
                         echo "</div>
                             </div>";
