@@ -26,151 +26,246 @@
         <source src="./assets/0319.mp4">
     </video>
     <?php
-        // Fonction pour activer ou désactiver un utilisateur dans le fichier CSV
-        function toggleStatus($file_name, $id, $column) {
-            // Ouvrir le fichier en mode lecture
-            if (($file = fopen($file_name, "r")) !== false) { // Mode lecture
-                // Tableau pour stocker les données du fichier
-                $donnees = [];
 
-                // Lire chaque ligne du fichier
-                while (($user = fgetcsv($file)) !== false) {
-                    $user[$column] = ($id === $user[0] && $user[$column] == 'active') ? 'desactive' : 'active';
-
-                    // Ajouter la ligne au tableau de données
-                    $donnees[] = $user;
-                }
-
-                // Fermer le fichier
-                fclose($file);
-
-                // Ouvrir le fichier en mode écriture
-                if (($file = fopen($file_name, "w")) !== false) { // Mode écritue
-                    // Écrire les données modifiées dans le fichier
-                    foreach ($donnees as $ligne) {
-                        fputcsv($file, $ligne);
-                    }
-
-                    // Fermer le fichier
-                    fclose($file);
-                }
-            }
-        }
-
-        // Vérifier si un utilisateur a été sélectionné pour activer ou désactiver
-        if (isset($_POST['user_id']) && isset($_POST['active_user'])) {
-            // Récupérer l'ID de l'utilisateur et l'action à effectuer depuis le formulaire
-            $user_id = $_POST['user_id'];
-            $action = $_POST['active_user'];
-
-            // Effectuer l'action en fonction du bouton cliqué
-            if ($action === 'Activer') {
-                toggleStatus('utilisateurs.csv', $user_id, 7);
-            } elseif ($action === 'Désactiver') {
-                toggleStatus('utilisateurs.csv', $user_id, 7);
-            }
-        }
-
-        // Vérifier si un quiz a été sélectionné pour activer ou désactiver
-        if (isset($_POST['quiz_id']) && isset($_POST['active_quiz'])) {
-            // Récupérer l'ID de l'utilisateur et l'action à effectuer depuis le formulaire
-            $quiz_id = $_POST['quiz_id'];
-            $action = $_POST['active_quiz'];
-
-            // Effectuer l'action en fonction du bouton cliqué
-            if ($action === 'Activer') {
-                toggleStatus('user_quiz.csv', $quiz_id, 6);
-            } elseif ($action === 'Désactiver') {
-                toggleStatus('user_quiz.csv', $quiz_id, 6);
-            }
-        
-        }
-
-        // Afficher le tableau des utilisateurs avec les boutons dynamiques pour activer ou désactiver chaque compte
-        if ($_SESSION['role'] == 'admin') {
-            // Tableau des utilisateurs :
-
-            // Ouvrir le fichier CSV en lecture
-            $file = fopen('utilisateurs.csv', 'r');
-            // Ignorer la première ligne
-            fgetcsv($file);
-
-            // Afficher le tableau des utilisateurs
-            echo "<br/><br/><br/><br/><br/><br/>
-            <h1>Tableau des utilisateurs :</h1>
-            <table>
-                    <thead>
-                        <tr>
-                            <th>Prenom</th>
-                            <th>Nom</th>
-                            <th>Role</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                        </thead>
-                        <tbody>";
+    // Fonction pour activer ou désactiver un utilisateur dans le fichier CSV
+    function active($file_name, $id, $column) {
+        // Ouvrir le fichier en mode lecture et écriture
+        $file = fopen($file_name, "r+");
+    
+        // Vérifier si le fichier a bien été ouvert
+        if ($file !== false) {
+    
+            // Tableau pour stocker les données du fichier
+            $donnees = [];
+    
+            // Lire chaque ligne du fichier
             while (($row = fgetcsv($file)) !== false) {
-                if ($row[5] != "admin") {
-                    echo "<tr>
-                            <td>{$row[1]}</td>
-                            <td>" . strtoupper($row[2]) . "</td>
-                            <td>" . strtoupper($row[5]) . "</td>
-                            <td>• " . strtoupper($row[6]) . "</td>
-                            <td>
-                                <form method='post'>
-                                    <input type='hidden' name='user_id' value='{$row[0]}'>
-                                    <input type='submit' name='active_user' value='" . ($row[7] == 'active' ? 'Désactiver' : 'Activer') . "'>
-                                </form>
-                            </td>
-                        </tr>";
+                // Vérifier si l'ID correspond à celui recherché
+                if ($id === $row[0]) {
+                    // Inverser l'état du statut dans la colonne spécifiée
+                    $row[$column] = ($row[$column] == 'active') ? 'desactive' : 'active';
                 }
+                // Ajouter la ligne modifiée au tableau de données
+                $donnees[] = $row;
             }
-            echo "</tbody>
-            </table><br/><br/><br/><br/><br/><br/>";
+    
+            // Remettre le pointeur de fichier au début
+            rewind($file);
+     
+            // Vider le contenu du fichier
+            ftruncate($file, 0);
+    
+            // Réécrire toutes les données modifiées dans le fichier
+            foreach ($donnees as $ligne) {
+                fputcsv($file, $ligne);
+            }
+    
             // Fermer le fichier
             fclose($file);
+    
+            // Retourner true pour indiquer que les modifications ont été effectuées avec succès
+            return true;
+        } else {
+            // En cas d'échec d'ouverture du fichier, retourner false
+            return false;
+        }
+    }
+    
+    // Vérifier si un utilisateur a été sélectionné pour activer ou désactiver
+    if (isset($_POST['user_id']) && isset($_POST['action_user'])) {
+        // Récupérer l'ID de l'utilisateur et l'action à effectuer depuis le formulaire
+        $user_id = $_POST['user_id'];
+        $action = $_POST['action_user'];
 
-            // Tableau des quiz :
+        // Effectuer l'action en fonction du bouton cliqué
+        if ($action === 'Activer' || $action === 'Désactiver') {
+            active('utilisateurs.csv', $user_id, 7);
+        }
+    }
 
-            // Ouvrir le fichier CSV en lecture
-            $file = fopen('user_quiz.csv', 'r');
-            // Ignorer la première ligne
-            fgetcsv($file);
+    // Vérifier si un quiz a été sélectionné pour lancer ou arrêter
+    if (isset($_POST['quiz_id']) && isset($_POST['action_quiz'])) {
+        // Récupérer l'ID du quiz et l'action à effectuer depuis le formulaire
+        $quiz_id = $_POST['quiz_id'];
+        $action = $_POST['action_quiz'];
 
-            // Afficher le tableau des quiz
-            echo "<br/><br/><br/><br/><br/><br/>
-            <h1>Tableau des Quiz :</h1>
-            <table>
-                    <thead>
-                        <tr>
-                            <th>Titre</th>
-                            <th>Description</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                        </thead>
-                        <tbody>";
-            while (($row = fgetcsv($file)) !== false) {
+        // Effectuer l'action en fonction du bouton cliqué
+        if ($action === 'Lancer' || $action === 'Arrêter') {
+            // Appeler la fonction appropriée pour lancer ou arrêter le quiz
+            // Ici, vous pouvez mettre votre fonction pour lancer ou arrêter le quiz
+        }
+    }
+
+    // Afficher le tableau des utilisateurs avec les boutons dynamiques pour activer ou désactiver chaque compte
+    if ($_SESSION['role'] == 'admin') {
+        // Tableau des utilisateurs :
+
+        // Ouvrir le fichier CSV en lecture
+        $file = fopen('utilisateurs.csv', 'r');
+        // Ignorer la première ligne
+        fgetcsv($file);
+
+        // Afficher le tableau des utilisateurs
+        echo "<br/><br/><br/><br/><br/><br/>
+        <h1>Tableau des utilisateurs :</h1>
+        <table>
+                <thead>
+                    <tr>
+                        <th>Prénom</th>
+                        <th>Nom</th>
+                        <th>Rôle</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>";
+        while (($row = fgetcsv($file)) !== false) {
+            if ($row[5] != "admin") {
                 echo "<tr>
-                        <td>" . $row[2] . "</td>
-                        <td>" . $row[3] . "</td>
-                        <td>• " . $row[5] . "</td>
+                        <td>{$row[1]}</td>
+                        <td>" . strtoupper($row[2]) . "</td>
+                        <td>" . strtoupper($row[5]) . "</td>
+                        <td>• " . strtoupper($row[6]) . "</td>
                         <td>
-                            <form method='post'>
-                                <input type='hidden' name='quiz_id' value='{$row[0]}'>
-                                <input type='submit' name='active_quiz' value='" . ($row[6] == 'active' ? 'Désactiver' : 'Activer') . "'>
+                            <form method='post' action='index.php'>
+                                <input type='hidden' name='user_id' value='{$row[0]}'>
+                                <input type='hidden' name='action_user' value='" . ($row[7] == 'active' ? 'Désactiver' : 'Activer') . "'>
+                                <input type='submit' value='" . ($row[7] == 'active' ? 'Désactiver' : 'Activer') . "'>
                             </form>
                         </td>
                     </tr>";
             }
-            echo "</tbody>
-            </table><br/><br/><br/><br/><br/><br/>";
-            // Fermer le fichier
-            fclose($file);
         }
-        ?>
-    <?php if ($_SESSION['role'] == 'school' || $_SESSION['role'] == 'company') : ?>
-    <a class="quiz" href="quiz.php">Add Quiz</a>
+        echo "</tbody>
+        </table><br/><br/><br/><br/><br/><br/>";
+        // Fermer le fichier
+        fclose($file);
+
+        // Tableau des quiz :
+
+        // Ouvrir le fichier CSV en lecture
+        $file = fopen('user_quiz.csv', 'r');
+        // Ignorer la première ligne
+        fgetcsv($file);
+
+        // Afficher le tableau des quiz
+        echo "<br/><br/><br/><br/><br/><br/>
+        <h1>Tableau des Quiz :</h1>
+        <table>
+                <thead>
+                    <tr>
+                        <th>Titre</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>";
+        while (($row = fgetcsv($file)) !== false) {
+            echo "<tr>
+                    <td>" . $row[2] . "</td>
+                    <td>" . $row[3] . "</td>
+                    <td>• " . $row[5] . "</td>
+                    <td>
+                        <form method='post' action='index.php'>
+                            <input type='hidden' name='quiz_id' value='{$row[0]}'>
+                            <input type='hidden' name='action_quiz' value='" . ($row[6] == 'Lancé' ? 'Arrêter' : 'Lancer') . "'>
+                            <input type='submit' value='" . ($row[6] == 'Lancé' ? 'Arrêter' : 'Lancer') . "'>
+                        </form>
+                    </td>
+                </tr>";
+        }
+        echo "</tbody>
+        </table><br/><br/><br/><br/><br/><br/>";
+        // Fermer le fichier
+        fclose($file);
+    }
+?>
+        <?php if ($_SESSION['role'] == 'school' || $_SESSION['role'] == 'company') : ?>
+            <a class="quiz" href="quiz.php">Add Quiz</a>
+            <?php 
+
+                // Fonction pour activer ou désactiver un utilisateur dans le fichier CSV
+                function lancer($id) {
+                    // Ouvrir le fichier en mode lecture
+                    if (($file = fopen('user_quiz.csv', "r")) !== false) { // Mode lecture
+                        // Tableau pour stocker les données du fichier
+                        $donnees = [];
+
+                        // Lire chaque ligne du fichier
+                        while (($row = fgetcsv($file)) !== false) {
+                            $row[5] = ($id === $row[0] && $row[5] == 'lancé') ? 'en cours' : 'lancé';
+
+                            // Ajouter la ligne au tableau de données
+                            $donnees[] = $row;
+                        }
+
+                        // Fermer le fichier
+                        fclose($file);
+
+                        // Ouvrir le fichier en mode écriture
+                        if (($file = fopen('user_quiz.csv', "w")) !== false) { // Mode écritue
+                            // Écrire les données modifiées dans le fichier
+                            foreach ($donnees as $ligne) {
+                                fputcsv($file, $ligne);
+                            }
+
+                            // Fermer le fichier
+                            fclose($file);
+                        }
+                    }
+                }
+
+                // Vérifier si un utilisateur a été sélectionné pour activer ou désactiver
+                if (isset($_POST['quiz_id']) && isset($_POST['status_quiz'])) {
+                    // Récupérer l'ID de l'utilisateur et l'action à effectuer depuis le formulaire
+                    $quiz_id = $_POST['quiz_id'];
+                    $action = $_POST['status_quiz'];
+
+                    // Effectuer l'action en fonction du bouton cliqué
+                    if ($action === 'lancé') {
+                        lancer($quiz_id);
+                    } elseif ($action === 'en cours') {
+                        lancer($quiz_id);
+                    }
+                }
+
+                // Tableau des quiz :
+
+                // Ouvrir le fichier CSV en lecture
+                $file = fopen('user_quiz.csv', 'r');
+                // Ignorer la première ligne
+                fgetcsv($file);
+
+                // Afficher le tableau des quiz
+                echo "<br/><br/><br/><br/><br/><br/>
+                <h1>Tableau des Quiz :</h1>
+                <table>
+                        <thead>
+                            <tr>
+                                <th>Titre</th>
+                                <th>Description</th>
+                                <th>Status</th>
+                            </tr>
+                            </thead>
+                            <tbody>";
+                while (($row = fgetcsv($file)) !== false) {
+                    echo "<tr>
+                            <td>" . $row[2] . "</td>
+                            <td>" . $row[3] . "</td>
+                            <td>                                
+                            <form method='post'>
+                                <input type='hidden' name='quiz_id' value='{$row[0]}'>
+                                <input type='submit' name='status_quiz' value='" . ($row[5] == 'en cours' ? 'lancé' : 'en cours') . "'>
+                            </form>
+                            </td>
+                        </tr>";
+                }
+                echo "</tbody>
+                </table><br/><br/><br/><br/><br/><br/>";
+                // Fermer le fichier
+                fclose($file);
+            ?>
     <?php endif; ?>
     <?php if ($_SESSION['role'] == 'user') : ?>
     <div class="container">
@@ -197,6 +292,7 @@
                 // Boucler à travers les lignes du fichier CSV
                 while (($row = fgetcsv($file)) !== false) {
                     if ($row !== null) {
+                        if($row[6] == 'active'){
                         // Récupérer l'URL de l'image ou utiliser l'URL correspondante dans le tableau $image_urls
                         $image_url = !empty($row[4]) ? $row[4] : $image_urls[$image_index];
 
@@ -215,6 +311,7 @@
                         // Si l'index dépasse la taille du tableau, réinitialiser à zéro
                         if ($image_index >= count($image_urls)) {
                             $image_index = 0;
+                        }
                         }
                     }
                 }
