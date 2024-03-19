@@ -202,7 +202,7 @@
 
                         // Afficher la diapositive du carousel avec les données du fichier CSV
                         echo "<div class='item' style='background-image: url(" . $image_url . ");'>
-                                <div class='content'>
+                        <div class='content' style='text-align: center;'>
                                     <div class='name'>" . $row[2] . "</div>
                                     <div class='des'>" . $row[3] . "</div>
                                     <button class='game' onclick='startGame(" . $row[0] . ")' style='margin: 0 auto;'>Start</button>";
