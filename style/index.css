@@ -337,9 +337,8 @@ main.table {
     visibility: visible;
 }
 
-
-table {
-    width: 80%;
+.table_down{
+    margin-top: 200px;
 }
 
 td img {

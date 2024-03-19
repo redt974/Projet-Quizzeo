@@ -1,10 +1,10 @@
 id,id_user,titre,description,image,status,active
-1,1,"Découverte de la Science","Testez vos connaissances scientifiques avec ce quiz passionnant !",./assets/science.jpg,'lancé',active
-2,1,"Histoire du Monde","Explorez les événements marquants de l'histoire mondiale avec ce quiz.",./assets/world.jpg,'lancé',active
-3,1,"UEFA Champions League","Testez vos connaissances sur l'UEFA Champions League.",./assets/ucl.jpg,"'en cours'",active
-4,1,DBZ,"Quiz passionnant sur Dragon Ball Z.",./assets/dbz.jpg,"'en cours'",active
-5,1,Espace,"Explorez l'univers avec ce quiz sur l'espace.",./assets/space.jpg,"'en cours'",active
-6,1,Cinéma,"Testez vos connaissances sur le cinéma et les films célèbres.",./assets/cinema.jpg,"'en cours'",active
-7,1,Logo,"Quiz sur les slogos de marquespopulaires.",./assets/logo.webp,"'en cours'",active
-8,1,Géographie,"Testez vos connaissances géographiques avec ce quiz divertissant.",./assets/geo.jpg,"'en cours'",active
-9,1,Animaux,"Explorez le règne animal avec ce quiz sur les animaux du monde.",./assets/animaux.png,"'en cours'",active
+1,3,"Découverte de la Science","Testez vos connaissances scientifiques avec ce quiz passionnant !",./assets/science.jpg,"en cours",active
+2,2,"Histoire du Monde","Explorez les événements marquants de l'histoire mondiale avec ce quiz.",./assets/world.jpg,lancé,active
+3,2,"UEFA Champions League","Testez vos connaissances sur l'UEFA Champions League.",./assets/ucl.jpg,lancé,active
+4,2,DBZ,"Quiz passionnant sur Dragon Ball Z.",./assets/dbz.jpg,lancé,active
+5,3,Espace,"Explorez l'univers avec ce quiz sur l'espace.",./assets/space.jpg,lancé,active
+6,3,Cinéma,"Testez vos connaissances sur le cinéma et les films célèbres.",./assets/cinema.jpg,lancé,active
+7,3,Logo,"Quiz sur les slogos de marquespopulaires.",./assets/logo.webp,"en cours",active
+8,3,Géographie,"Testez vos connaissances géographiques avec ce quiz divertissant.",./assets/geo.jpg,lancé,active
+9,2,Animaux,"Explorez le règne animal avec ce quiz sur les animaux du monde.",./assets/animaux.png,"en cours",active
