@@ -3,10 +3,14 @@ session_start();
 
 $error_message = "";
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Collecte des données du formulaire
-    $quizTitle = $_POST['quizTitle'];
-    $quizDescription = $_POST['quizDescription'];
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        // Collecte des données du formulaire
+        $quizTitle = $_POST['quizTitle'];
+        $quizDescription = $_POST['quizDescription'];
+        $quizHeure = $_POST['quizHeure'];
+        $quizMinute = $_POST['quizMinute'];
+        $quizSeconde = $_POST['quizSeconde'];
+        
 
     // Check if image file is selected
     if (isset ($_FILES["image"]["name"])) {
@@ -75,12 +79,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $image = '';
     }
 
-    $id = $_SESSION['id'];
+        $id_user = $_SESSION['id'];
 
-    // Insertion dans le fichier user_quiz.csv
-    $userQuizFile = 'user_quiz.csv';
-    $userQuizData = [getNextQuizId($userQuizFile), $id, $quizTitle, $quizDescription, $image, "en cours", "active"];
-    insertIntoCSV($userQuizFile, $userQuizData);
+        // Insertion dans le fichier user_quiz.csv
+        $userQuizFile = 'user_quiz.csv';
+        $userQuizData = [getNextQuizId($userQuizFile), $id_user, $quizTitle, $quizDescription,$quizHeure . ":" . $quizMinute . ":" . $quizSeconde,$image, "en cours", "active"];
+        insertIntoCSV($userQuizFile, $userQuizData);
 
     // Obtention de l'ID du dernier quiz inséré
     $lastQuizId = getNextQuizId($userQuizFile) - 1;
@@ -181,8 +185,20 @@ function getNextQuizId($filename)
         <label for="quizTitle">Titre du Quiz :</label>
         <input type="text" id="quizTitle" name="quizTitle" required>
 
-        <label for="quizDescription">Description du Quiz :</label>
-        <textarea id="quizDescription" name="quizDescription" rows="4" required></textarea>
+    <label for="quizDescription">Description du Quiz :</label>
+    <textarea id="quizDescription" name="quizDescription" rows="4" required></textarea>
+
+    <label for="quizTime">Timer</label>
+    
+
+    <label for="quizHeure">Heure :</label>
+    <input type="number" id="quizHeure" name="quizHeure" required>
+
+    <label for="quizMinute">Minute :</label>
+    <input type="number" id="quizMinute" name="quizMinute" required>
+
+    <label for="quizSeconde">Seconde :</label>
+    <input type="number" id="quizSeconde" name="quizSeconde" required>
 
         <div id="questionsContainer"></div>
 
@@ -206,9 +222,10 @@ function getNextQuizId($filename)
             <?php echo $error_message; ?>
         </div>
 
-        <button type="submit">Enregistrer le Quiz</button>
-    </form>
-    <script defer src="./script/quiz.js"></script>
+    <button type="submit">Enregistrer le Quiz</button>
+</form>
+
+    <script src="./script/quiz.js"></script>
 </body>
 
 </html>

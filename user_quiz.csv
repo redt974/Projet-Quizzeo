@@ -1,2 +1,13 @@
-id,id_user,titre,description,image,status,active
-1,2,"Découverte de la Science","Testez vos connaissances scientifiques avec ce quiz passionnant !",uploads/65fa15d439046_science.jpg,"en cours",active
+id,id_user,titre,description,time,image,status,active
+1,2,"Découverte de la Science","Testez vos connaissances scientifiques avec ce quiz passionnant !",0:0:10,./assets/science.jpg,lancé,active
+2,2,"Histoire du Monde","Explorez les événements marquants de l'histoire mondiale avec ce quiz.",0:0:10,./assets/world.jpg,lancé,active
+3,2,"UEFA Champions League","Testez vos connaissances sur l'UEFA Champions League.",0:0:10,./assets/ucl.jpg,"en cours",active
+4,2,DBZ,"Quiz passionnant sur Dragon Ball Z.",0:0:10,./assets/dbz.jpg,"en cours",active
+5,2,Espace,"Explorez l'univers avec ce quiz sur l'espace.",0:0:10,./assets/space.jpg,lancé,active
+6,2,Cinéma,"Testez vos connaissances sur le cinéma et les films célèbres.",0:0:10,./assets/cinema.jpg,"en cours",active
+7,2,Logo,"Quiz sur les slogos de marquespopulaires.",0:0:10,./assets/logo.webp,lancé,active
+8,2,Géographie,"Testez vos connaissances géographiques avec ce quiz divertissant.",0:0:10,./assets/geo.jpg,"en cours",active
+9,2,Animaux,"Explorez le règne animal avec ce quiz sur les animaux du monde.",0:0:10,./assets/animaux.png,"en cours",active
+11,3,feuille,feuille,0:0:10,uploads/65f9a4000f9f2_feuille.jpeg,"en cours",active
+12,3,testtime,time,0:0:10,uploads/65fac03531b90_maison.jpeg,"en cours",active
+13,3,testtimee,timee,0:0:10,uploads/65fac1da72373_maison.jpeg,"en cours",active
