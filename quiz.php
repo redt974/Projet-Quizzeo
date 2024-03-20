@@ -5,6 +5,10 @@
         // Collecte des données du formulaire
         $quizTitle = $_POST['quizTitle'];
         $quizDescription = $_POST['quizDescription'];
+        $quizHeure = $_POST['quizHeure'];
+        $quizMinute = $_POST['quizMinute'];
+        $quizSeconde = $_POST['quizSeconde'];
+        
 
             // Check if image file is selected
             if(isset($_FILES["image"]["name"])) {
@@ -73,11 +77,11 @@
 
             
 
-        $id = $_SESSION['id'];
+        $id_user = $_SESSION['id'];
 
         // Insertion dans le fichier user_quiz.csv
         $userQuizFile = 'user_quiz.csv';
-        $userQuizData = [getNextQuizId($userQuizFile), $id, $quizTitle, $quizDescription, $image, "en cours", "active"];
+        $userQuizData = [getNextQuizId($userQuizFile), $id_user, $quizTitle, $quizDescription,$quizHeure . ":" . $quizMinute . ":" . $quizSeconde,$image, "en cours", "active"];
         insertIntoCSV($userQuizFile, $userQuizData);
 
         // Obtention de l'ID du dernier quiz inséré
@@ -178,6 +182,18 @@
     <label for="quizDescription">Description du Quiz :</label>
     <textarea id="quizDescription" name="quizDescription" rows="4" required></textarea>
 
+    <label for="quizTime">Timer</label>
+    
+
+    <label for="quizHeure">Heure :</label>
+    <input type="number" id="quizHeure" name="quizHeure" required>
+
+    <label for="quizMinute">Minute :</label>
+    <input type="number" id="quizMinute" name="quizMinute" required>
+
+    <label for="quizSeconde">Seconde :</label>
+    <input type="number" id="quizSeconde" name="quizSeconde" required>
+
     <div id="questionsContainer"></div>
 
     <button type="button" onclick="addQuestion()">Ajouter une question</button>
@@ -215,7 +231,7 @@
             questionForm.innerHTML = '<label for="questions">Nom de la Question :</label>' +
                                     '<input type="text" name="questions[]" required>' +
                                     '<label for="points">Points :</label>' +
-                                    '<input type="text" name="points" required>' +
+                                    '<input type="number" name="points" required>' +
                                     '<br>' +
                                     '<div class="answersContainer"></div>' +
                                     '<button type="button" onclick="addAnswer(this)">Ajouter une Réponse</button>' +

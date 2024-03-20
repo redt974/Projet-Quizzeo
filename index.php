@@ -198,7 +198,7 @@
                 while (($row = fgetcsv($file)) !== false) {
                     if ($row !== null) {
                         // Récupérer l'URL de l'image ou utiliser l'URL correspondante dans le tableau $image_urls
-                        $image_url = !empty($row[4]) ? $row[4] : $image_urls[$image_index];
+                        $image_url = !empty($row[5]) ? $row[5] : $image_urls[$image_index];
 
                         // Afficher la diapositive du carousel avec les données du fichier CSV
                         echo "<div class='item' style='background-image: url(" . $image_url . ");'>

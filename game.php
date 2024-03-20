@@ -21,6 +21,62 @@
         $user_id = $_POST['user_id'];
         $quiz_id = $_POST['quiz_id'];
 
+            //Recupération du timer sur le csv
+// Récupération des heures, minutes et secondes depuis le fichier CSV
+$file = fopen('user_quiz.csv', 'r');
+
+if ($file !== FALSE) {
+    fgetcsv($file);
+    while (($row = fgetcsv($file)) !== FALSE) {
+        if ($quiz_id == $row[0]){
+            $time = $row[4];
+            break; // Sortir de la boucle une fois que nous avons trouvé le temps
+        }
+    }
+    fclose($file);
+}
+
+// Formatage du temps comme un tableau JavaScript
+$timeArray = explode(':', $time);
+$timeArray = array_map('intval', $timeArray);
+
+// Formatage de $time comme un tableau JavaScript
+$time = '[' . implode(',', $timeArray) . ']';
+
+echo "<script>
+var timeArray = $time; // Utilisation directe du tableau $time
+var hours = parseInt(timeArray[0]); // Récupération des heures
+var minutes = parseInt(timeArray[1]); // Récupération des minutes
+var seconds = parseInt(timeArray[2]); // Récupération des secondes
+
+var total_seconds = hours * 3600 + minutes * 60 + seconds; // Convertir en secondes
+var timer = setInterval(function() {
+    // Calcul des heures, minutes et secondes restantes
+    var hours = Math.floor(total_seconds / 3600);
+    var minutes = Math.floor((total_seconds % 3600) / 60);
+    var seconds = total_seconds % 60;
+
+    // Formatage des heures, minutes et secondes pour qu'ils aient toujours deux chiffres
+    hours = ('0' + hours).slice(-2);
+    minutes = ('0' + minutes).slice(-2);
+    seconds = ('0' + seconds).slice(-2);
+
+    // Affichage du temps restant
+    document.getElementById('timer').innerHTML = 'Timer: ' + hours + ' H ' + minutes + ' M ' + seconds + ' S';
+
+    // Décrémentation du temps restant
+    total_seconds--;
+
+    // Vérification si le temps est écoulé
+    if (total_seconds < 0) {
+        clearInterval(timer);
+        document.getElementById('timer').innerHTML = 'Temps écoulé';
+        document.getElementById('quizForm').submit(); // Envoyer le formulaire lorsque le temps est écoulé
+    }
+}, 1000);
+</script>";
+
+
         // Ouvrir les fichiers CSV nécessaires
         $quiz_questions_file = fopen('user_quiz_question.csv', 'r');
         $quiz_answers_file = fopen('user_quiz_answer.csv', 'r');
@@ -48,6 +104,8 @@
             if($row[0] == $quiz_id) {
                 echo "<h1>{$row[2]}</h1>";
                 echo "<p>{$row[3]}</p>";
+                echo "<div id='timer'></div>";
+
             }
         }
 
@@ -196,6 +254,7 @@
             // header('location: quiz_save.php');
         }
     }
+    
     
     ?>
 
