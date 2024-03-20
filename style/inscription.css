@@ -61,7 +61,7 @@ select {
 }
 input[type="submit"],
 .inscription {
-  background-color: #ec9593;
+  background-color: #A494C4;
   color: white;
   padding: 15px 20px;
   border: none;
@@ -73,7 +73,7 @@ input[type="submit"],
   text-decoration: none;
 }
 input[type="submit"]:hover {
-  background-color: #adbce6;
+  background-color: #DAD3E6;
 }
 .switch-page {
   margin-bottom: 50px;

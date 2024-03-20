@@ -1,6 +1,8 @@
 <?php
     session_start();
 
+    $error_message = "";
+
     // Check if the form has been submitted
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
@@ -14,13 +16,13 @@
         // Validate email using regular expression
         $emailPattern = '/^[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]{2,4}$/';
         if (!preg_match($emailPattern, $email)) {
-            echo "L'adresse email est invalide !";
+            $error_message = "L'adresse email est invalide !";
         }
 
         // Validate password using regular expression
         $passwordPattern = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@$!%*#?&])[A-Za-z0-9@$!%*#?&]{8,}$/';
         if (!preg_match($passwordPattern, $password)) {
-            echo "Votre mot de passe doit avoir une longueur minimale de 8 caractères. Votre mot de passe doit contenir au moins une lettre minuscule, une lettre majuscule, un chiffre, un caractère spécial parmi @$!%*#?&";
+            $error_message = "Votre mot de passe doit avoir une longueur minimale de 8 caractères. Votre mot de passe doit contenir au moins une lettre minuscule, une lettre majuscule, un chiffre, un caractère spécial parmi @$!%*#?&";
         }
 
         // Read existing users from CSV file
@@ -28,7 +30,7 @@
 
         // Check if the user already exists
         if (userExists($file_name, $email)) {
-            echo "User already exists!";
+            $error_message = "User already exists!";
         }
 
         // Determine the next available user ID
@@ -162,19 +164,13 @@
                 </select>
             </div>
         </div>
+        <div id="inscriptionError">
+            <?php echo $error_message; ?>
+        </div>
         <div class="g-recaptcha" data-sitekey="6LddDpUpAAAAAAeUvhSEb5l_fT8u29IGVWA40sFh"></div>
         <div id="captchaError"></div>
 
-        <script defer>
-            function validateForm() {             
-                var captchaResponse = grecaptcha.getResponse();             
-                while (captchaResponse == "") {                 
-                    document.getElementById("captchaError").innerHTML = "<h4>Veuillez compléter le reCAPTCHA.</h4>";
-                    return false;             
-                }             
-                return true; 
-            } 
-        </script>
+        <script defer src="./script/inscription.js"></script>
         <input type="submit" value="Inscription">
     </form>
     <div class="switch-page">

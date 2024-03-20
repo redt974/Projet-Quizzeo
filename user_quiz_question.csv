@@ -1,7 +1,4 @@
 id,id_quiz,question,points,libre
-1,1,"Quelle est la formule chimique de l'eau ?",5,non
-2,1,"Qui a découvert la gravité ?",5,non
-3,2,"Quel événement a déclenché la Première Guerre mondiale ?",5,non
-4,2,"Quelle est la capitale du Japon ?",5,non
-5,3,"Qui est le roi des pirates ?",1,non
-6,3,"Qui suis je ?",1,non
+1,1,"Quel est le nom de la première femme à avoir remporté un prix Nobel ?",5,qcm
+2,1,"Quelle est la formule chimique de l'eau ?",5,qcm
+3,1,"Qui a découvert la loi de la gravitation universelle ?",5,qcm

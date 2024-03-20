@@ -163,7 +163,7 @@ var timer = setInterval(function() {
     if(isset($_POST['submit'])) {
         $user_id = $_POST['user_id'];
         $quiz_id = $_POST['quiz_id'];
-        $date = date('Y-m-d H:i:s');      
+        $date = date('H\h i\m s\s');      
 
         // Trouver l'id du prochain résultat ou réponse libre
         function getNextId($file_name){

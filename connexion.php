@@ -1,7 +1,9 @@
 <?php
-session_start();
+    session_start();
 
-// Check if the form has been submitted
+    $error_message = ""; // Variable pour stocker les messages d'erreur
+
+    // Check if the form has been submitted
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Retrieve form data
         $email = $_POST["email"];
@@ -12,6 +14,7 @@ session_start();
 
         if ($file !== false) {
             $donnees = []; 
+            $userFound = false;
             while (($user = fgetcsv($file)) !== false) {
                 if ($user[3] === $email && password_verify($password, $user[4]) && $user[7] == 'active') {
                     $_SESSION["id"] = $user[0];
@@ -24,26 +27,36 @@ session_start();
 
                     // Modification du status de l'utilisateur
                     $user[6] = "connected";
+                    
+                    $userFound = true;
+                } else if ($user[7] != 'active') {
+                    $error_message = "Votre compte a été désactivé ! Revenez plus tard...";
+                }
+                else{
+                    $error_message = "L'email ou le mot de passe est incorrect !";
                 }
                 $donnees[] = $user;
             }
-    
+
             // Fermer le fichier
             fclose($file);
 
-            // Ouvrir le fichier en mode écriture
-            if (($file = fopen("utilisateurs.csv", "w")) !== false) { // Mode écritue
-                // Écrire les données modifiées dans le fichier
-                foreach ($donnees as $ligne) {
-                    fputcsv($file, $ligne);
-                }
+            // Si l'utilisateur est trouvé, rediriger
+            if ($userFound) {
+                // Ouvrir le fichier en mode écriture
+                if (($file = fopen("utilisateurs.csv", "w")) !== false) { // Mode écritue
+                    // Écrire les données modifiées dans le fichier
+                    foreach ($donnees as $ligne) {
+                        fputcsv($file, $ligne);
+                    }
 
-                // Fermer le fichier
-                fclose($file);
-            }        
-        
-            // Redirect to index.php
-            header("Location: index.php");
+                    // Fermer le fichier
+                    fclose($file);
+                }        
+
+                // Redirect to index.php
+                header("Location: index.php");
+            }
         }
     } 
 ?>
@@ -78,6 +91,19 @@ session_start();
                 <input type="password" id="password" name="password" required>
             </div>
         </div>
+        <div id="connexionError">
+            <?php echo $error_message; ?>
+        </div>
+        <script defer>
+            function validateForm($message) {             
+                var captchaResponse = grecaptcha.getResponse();             
+                while (captchaResponse == "") {                 
+                    document.getElementById("connexionError").innerHTML = "<h4>".$message."</h4>";
+                    return false;             
+                }             
+                return true; 
+            } 
+        </script>
         <input type="submit" value="Connexion">
     </form>
     <div>

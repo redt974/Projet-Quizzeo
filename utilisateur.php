@@ -5,61 +5,101 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profil</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="./style/utilisateur.css">
+    <style>
+      
+    </style>
 </head>
 <body>
     <video id="background-video" autoplay loop muted>
-                    <source src="./assets/background6.mp4">
+        <source src="./assets/0319.mp4">
     </video>
     <?php
         session_start();
         if(!isset($_SESSION['email'])){
             header('location: connexion.php');
+            exit; // Arrête l'exécution du script
         }
         include './components/header.php';
 
-        ?>
-        <div class="wrapper">
-    <button id="editProfileBtn">Modifier</button>
-    <form id="profileForm" action="#" style="display: none;">
-        <h2>Votre Profil</h2>
-        <div class="input-field">
-            <input type="text" value="<?php echo $_SESSION['prenom']; ?>" required>
-            <label>Ton prénom</label>
-        </div>
-        <div class="input-field">
-            <input type="text" value="<?php echo $_SESSION['nom']; ?>" required>
-            <label>Ton nom</label>
-        </div>
-        <div class="input-field">
-            <input type="text" value="<?php echo $_SESSION['email']; ?>" required>
-            <label>Ton email</label>
-        </div>
-        <select class="form-select form-select-lg mb-3" aria-label="Large select example">
-            <option value="1">Ecole</option>
-            <option value="2">Entreprise</option>
-            <option value="3">Utilisateur standard</option>
-        </select>
-        <button type="submit">Soumettre</button>
-    </form>
-</div>
+        // Vérifie si le formulaire a été soumis
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            // Récupère les données du formulaire
+            $prenom = $_POST['prenom'];
+            $nom = $_POST['nom'];
+            $email = $_POST['email'];
+            $role = $_POST['role'];
 
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var editProfileBtn = document.getElementById('editProfileBtn');
-        var profileForm = document.getElementById('profileForm');
+            // Chemin vers le fichier CSV
+            $fichier_csv = 'utilisateurs.csv';
 
-        editProfileBtn.addEventListener('click', function() {
-            if (profileForm.style.display === "none") {
-                profileForm.style.display = "block";
-            } else {
-                profileForm.style.display = "none";
+            // Lit le contenu actuel du fichier CSV
+            $lines = file($fichier_csv);
+
+            // Parcourt chaque ligne du fichier CSV
+            foreach ($lines as $key => $line) {
+                // Divise la ligne en colonnes
+                $data = str_getcsv($line);
+
+                // Vérifie si l'email de la ligne correspond à l'email de l'utilisateur connecté
+                if ($data[3] === $_SESSION['email']) {
+                    // Modifie les données appropriées
+                    $lines[$key] = implode(',', [$data[0], $prenom, $nom, $email, $data[4], $role, $data[6], $data[7]]) . "\n";
+
+                    // Met à jour les valeurs de session
+                    $_SESSION['prenom'] = $prenom;
+                    $_SESSION['nom'] = $nom;
+                    $_SESSION['email'] = $email;
+                    $_SESSION['role'] = $role;
+
+                    break; // Arrête la boucle après la mise à jour
+                }
             }
-        });
-    });
-</script>
 
-    
+            // Réécrit le fichier CSV avec les nouvelles données
+            file_put_contents($fichier_csv, implode('', $lines));
+
+            // Redirige vers le profil après la mise à jour
+            header('location: utilisateur.php');
+            exit; // Arrête l'exécution du script après la redirection
+        }
+    ?>
+    <div class="wrapper">
+        <h2>Votre Profil</h2>
+        <button id="editProfileBtn">Modifier</button>
+        <form id="profileForm" action="#" method="post"> <!-- Ajout de method="post" -->
+            <div class="input-field">
+                <input type="text" value="<?php echo $_SESSION['prenom']; ?>" name="prenom" required readonly>
+                <label>Ton prénom</label>
+            </div>
+            <div class="input-field">
+                <input type="text" value="<?php echo $_SESSION['nom']; ?>" name="nom" required readonly>
+                <label>Ton nom</label>
+            </div>
+            <div class="input-field">
+                <input type="text" value="<?php echo $_SESSION['email']; ?>" name="email" required readonly>
+                <label>Ton email</label>
+            </div>
+            <select class="form-select form-select-lg mb-3" aria-label="Large select example" name="role" readonly>
+                <option value="school" <?php if ($_SESSION['role'] === 'school') echo 'selected'; ?>>Ecole</option>
+                <option value="company" <?php if ($_SESSION['role'] === 'company') echo 'selected'; ?>>Entreprise</option>
+                <option value="user" <?php if ($_SESSION['role'] === 'user') echo 'selected'; ?>>Utilisateur standard</option>
+            </select>
+            <button type="submit">Soumettre</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('editProfileBtn').addEventListener('click', function() {
+            var inputs = document.querySelectorAll('#profileForm input, #profileForm select');
+            inputs.forEach(function(input) {
+                input.removeAttribute('readonly');
+                setInterval(function() {
+                    input.classList.toggle('blink'); // Alterne la classe blink chaque seconde
+                }, 1000);
+            });
+        });
+    </script>
 </body>
 </html>
