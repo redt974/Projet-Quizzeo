@@ -10,6 +10,7 @@
   z-index: -1;
 }
 
+
 body {
   font-family: Arial, sans-serif;
   display: flex;
@@ -20,6 +21,7 @@ body {
   width: 100%;
   color: #000000;
   overflow-x: hidden;
+  margin: 0; /* Ajout pour enlever les marges par défaut du body */
 }
 
 .wrapper {
@@ -29,6 +31,7 @@ body {
   text-align: center;
   backdrop-filter: blur(9px);
   -webkit-backdrop-filter: blur(9px);
+  background-color: rgba(255, 255, 255, 0.5); /* Ajout d'un fond semi-transparent */
 }
 
 form {
@@ -50,7 +53,7 @@ h2 {
 
 .input-field label {
   position: absolute;
-  top: -60%;
+  top: -100%;
   left: 0;
   color: #8C73B4;
   font-size: 24px;
@@ -93,10 +96,4 @@ button:hover {
   color: #fff;
   border-color: #fff;
   background: rgba(255, 255, 255, 0.15);
-}
-
-.register {
-  text-align: center;
-  margin-top: 30px;
-  color: #fff;
 }

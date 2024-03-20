@@ -17,12 +17,19 @@
 
             echo '<a href="#" class="jaune" id="userDropdown"><div class="user"><i class="fa-solid fa-user fa-lg"></i></div></a>';
             echo '<div id="dropdownContent" style="display:none;">';
-            if ($currentPage == 'utilisateur.php') {
+            if ($currentPage == 'forgot.php') {
                 echo '<a href="./logout.php">Se déconnecter</a>';
-                echo '<a href="./index.php">Retour à l\'accueil</a>';
-            } else {
+                echo '<a href="./utilisateur.php">Retour au profil</a>'; // Modifier le lien pour revenir au profil
+            } elseif ($currentPage == 'index.php') {
                 echo '<a href="./logout.php">Se déconnecter</a>';
-                echo '<a href="./utilisateur.php">Profil</a>';
+                echo '<a href="./utilisateur.php">Profil</a>'; // Modifier le lien pour revenir au profil
+
+            } 
+            
+            
+             else  {
+                echo '<a href="./logout.php">Se déconnecter</a>';
+                echo '<a href="./index.php">Retour à l\'accueil</a>'; // Garder le lien pour revenir à l'accueil
             }
             echo '</div>';
         }

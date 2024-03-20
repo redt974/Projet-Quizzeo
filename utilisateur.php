@@ -6,9 +6,17 @@
     <title>Profil</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="./style/utilisateur.css">
+    <link rel="stylesheet" href="./style/utilisateu.css">
     <style>
-      
+        /* @keyframes wavy {
+            0% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            100% { transform: translateX(-5px); }
+        }
+
+        input:not([readonly]) {
+            animation: wavy 1s infinite;
+        } */
     </style>
 </head>
 <body>
@@ -68,16 +76,17 @@
     <div class="wrapper">
         <h2>Votre Profil</h2>
         <button id="editProfileBtn">Modifier</button>
+        <button id="cancelBtn" style="display: none;">Annuler les modifications</button>
         <form id="profileForm" action="#" method="post"> <!-- Ajout de method="post" -->
-            <div class="input-field">
+            <div class="input-field mb-3">
                 <input type="text" value="<?php echo $_SESSION['prenom']; ?>" name="prenom" required readonly>
                 <label>Ton prénom</label>
             </div>
-            <div class="input-field">
+            <div class=" input-field mb-3">
                 <input type="text" value="<?php echo $_SESSION['nom']; ?>" name="nom" required readonly>
                 <label>Ton nom</label>
             </div>
-            <div class="input-field">
+            <div class="input-field mb-3">
                 <input type="text" value="<?php echo $_SESSION['email']; ?>" name="email" required readonly>
                 <label>Ton email</label>
             </div>
@@ -86,19 +95,33 @@
                 <option value="company" <?php if ($_SESSION['role'] === 'company') echo 'selected'; ?>>Entreprise</option>
                 <option value="user" <?php if ($_SESSION['role'] === 'user') echo 'selected'; ?>>Utilisateur standard</option>
             </select>
-            <button type="submit">Soumettre</button>
+            <button type="button">   <a href="forgot.php">Modifier le mot de passe</a></button><br>
+            <button type="submit" id="submitBtn">Soumettre</button>
+            <a href="http://"></a>
         </form>
     </div>
 
     <script>
-        document.getElementById('editProfileBtn').addEventListener('click', function() {
-            var inputs = document.querySelectorAll('#profileForm input, #profileForm select');
+        var editBtn = document.getElementById('editProfileBtn');
+        var cancelBtn = document.getElementById('cancelBtn');
+        var inputs = document.querySelectorAll('#profileForm input, #profileForm select');
+        var submitBtn = document.getElementById('submitBtn');
+
+        editBtn.addEventListener('click', function() {
             inputs.forEach(function(input) {
                 input.removeAttribute('readonly');
-                setInterval(function() {
-                    input.classList.toggle('blink'); // Alterne la classe blink chaque seconde
-                }, 1000);
             });
+            editBtn.style.display = 'none';
+            cancelBtn.style.display = 'inline-block';
+        });
+
+        cancelBtn.addEventListener('click', function() {
+            inputs.forEach(function(input) {
+                input.setAttribute('readonly', 'readonly');
+            });
+            editBtn.style.display = 'inline-block';
+            cancelBtn.style.display = 'none';
+            window.location.href = 'utilisateur.php'; // Redirection vers utilisateur.php
         });
     </script>
 </body>
