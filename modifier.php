@@ -10,7 +10,12 @@ if (!isset($_SESSION['email'])) {
 // Vérifier si le formulaire a été soumis
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Lire le fichier CSV
-    if (($file = fopen("utilisateurs.csv", "r+")) !== false) {
+    $file = fopen("utilisateurs.csv", "r+");
+
+    // Vérifier si le fichier a bien été ouvert
+    if ($file !== false) {
+        $trouve = false; // Indicateur si l'utilisateur est trouvé
+
         // Tableau pour stocker les données du fichier
         $donnees = [];
 
@@ -37,24 +42,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $donnees[] = $ligne;
         }
 
-        // Réécrire le fichier avec les données modifiées
-        ftruncate($file, 0); // Tronquer le fichier
-        rewind($file); // Rembobiner le pointeur du fichier
-        foreach ($donnees as $ligne) {
-            fputcsv($file, $ligne);
-        }
-
         // Fermer le fichier
         fclose($file);
-        
+
+        // Si l'utilisateur est trouvé et le mot de passe a été mis à jour, réécrire le fichier avec les données modifiées
         if ($trouve) {
-            header('location: utilisateur.php');
-            exit;
+            // Ouvrir à nouveau le fichier en mode écriture
+            $file = fopen("utilisateurs.csv", "w");
+
+            // Vérifier si le fichier a bien été ouvert
+            if ($file !== false) {
+                // Écrire les données mises à jour dans le fichier
+                foreach ($donnees as $ligne) {
+                    fputcsv($file, $ligne);
+                }
+                // Fermer le fichier
+                fclose($file);
+                
+                // Rediriger l'utilisateur
+                header('location: utilisateur.php');
+            } else {
+                echo "Erreur lors de l'ouverture du fichier pour l'écriture.";
+            }
         }
+    } else {
+        echo "Erreur lors de l'ouverture du fichier pour la lecture.";
     }
 } else {
     // Rediriger vers une page d'erreur si le formulaire n'a pas été soumis correctement
     header('location: utilisateur.php');
-    exit;
 }
 ?>
