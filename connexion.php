@@ -72,6 +72,10 @@
 <body>
     <?php 
         include './components/header.php';
+
+        if (isset ($_SESSION['email'])) {
+            header('location: index.php');
+        }
     ?>
     <video id="background-video" autoplay loop muted>
         <source src="./assets/background.mp4">
