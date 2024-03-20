@@ -89,7 +89,6 @@
         fgetcsv($file);
 
         if (($row = fgetcsv($file)) !== false) {
-            fclose($file);
             // Afficher le tableau des utilisateurs
             echo '<main class="table" id="customers_table">
                     <section class="table__header">
@@ -138,10 +137,6 @@
 
             // Fermer le fichier
             fclose($file);
-        } else {
-            fclose($file);
-            $error_message = " ";
-        }
         
         // Tableau des quiz :
 
@@ -151,6 +146,7 @@
 
         if (($row = fgetcsv($file)) !== false) {
             fclose($file);
+
             // Ouvrir le fichier CSV en lecture
             $file = fopen('user_quiz.csv', 'r');
             // Ignorer la première ligne
@@ -179,12 +175,12 @@
                     echo "<tr>
                             <td>" . $row[2] . "</td>
                             <td>" . $row[3] . "</td>
-                            <td>• " . $row[5] . "</td>
+                            <td>• " . $row[6] . "</td>
                             <td>
                                 <form method='post' action='index.php'>
                                     <input type='hidden' name='quiz_id' value='{$row[0]}'>
-                                    <input type='hidden' name='action_quiz' value='" . ($row[6] == 'active' ? 'Désactiver' : 'Activer') . "'>
-                                    <input type='submit' value='" . ($row[6] == 'active' ? 'Désactiver' : 'Activer') . "'>
+                                    <input type='hidden' name='action_quiz' value='" . ($row[7] == 'active' ? 'Désactiver' : 'Activer') . "'>
+                                    <input type='submit' value='" . ($row[7] == 'active' ? 'Désactiver' : 'Activer') . "'>
                                 </form>
                             </td>
                         </tr>";
@@ -198,9 +194,10 @@
             // Fermer le fichier
             fclose($file);
         } else {
-            fclose($file);
             echo "<div>Vous n'avez pas encore créer de quiz ! Faites-en un dès maintenant !</div>";
         }
+    }
+
     ?>
     <?php if ($_SESSION['role'] == 'school' || $_SESSION['role'] == 'company'): ?>
         <a class="quiz" href="quiz.php">Add Quiz</a>
@@ -223,7 +220,7 @@
                     // Vérifier si l'ID correspond à celui recherché
                     if ($id === $row[0]) {
                         // Inverser l'état du statut dans la colonne spécifiée
-                        $row[5] = ($row[5] == 'lancé') ? 'en cours' : 'lancé';
+                        $row[6] = ($row[6] == 'lancé') ? 'en cours' : 'lancé';
                     }
                     // Ajouter la ligne au tableau de données
                     $donnees[] = $row;
@@ -283,31 +280,38 @@
         fgetcsv($file);
 
         // Afficher le tableau des quiz
-        echo "<br/><br/><br/><br/><br/><br/>
-            <h1>Tableau de vos Quiz :</h1>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Titre</th>
-                        <th>Description</th>
-                        <th>Nombre de réponses</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                    </thead>
-                    <tbody>";
+            echo '<main class="table" id="customers_table">
+                    <section class="table__header">
+                        <h1>Tableau des quiz :</h1>
+                        <div class="input-group">
+                            <input type="search" placeholder="Rechercher...">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </div>
+                    </section>
+                    <section class="table__body">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Titre</th>
+                                    <th>Description</th>
+                                    <th>Nombre de réponses</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>';
         while (($row = fgetcsv($file)) !== false) {
             if ($_SESSION['id'] === $row[1]) {
                 echo "<tr>
                         <td>" . $row[2] . "</td>
                         <td>" . $row[3] . "</td>
                         <td>" . nombreResult($row[0]) . "</td>
-                        <td>" . $row[5] . "</td>
+                        <td>" . ucwords($row[6]) . "</td>
                         <td>                                
                         <form method='post'>
                             <input type='hidden' name='quiz_id' value='{$row[0]}'>
-                            <input type='hidden' name='status_quiz' value='" . ($row[5] == 'lancé' ? 'En cours' : 'Lancé') . "'>
-                            <input type='submit' value='" . ($row[5] == 'lancé' ? 'En cours' : 'Lancé') . "'>
+                            <input type='hidden' name='status_quiz' value='" . ($row[6] == 'lancé' ? 'En cours' : 'Lancé') . "'>
+                            <input type='submit' value='" . ($row[6] == 'lancé' ? 'En cours' : 'Lancé') . "'>
                         </form>
                         </td>
                     </tr>";
@@ -315,8 +319,10 @@
                 echo "<div>Vous n'avez pas encore créer de quiz ! Faites-en un dès maintenant !</div>";
             }
         }
-        echo "</tbody>
-            </table><br/><br/><br/><br/><br/><br/>";
+            echo '</tbody>
+            </table>
+        </section>
+        </main>';
         // Fermer le fichier
         fclose($file);
         ?>
@@ -357,7 +363,7 @@
             // Ignorer la première ligne
             fgetcsv($file);
             // Afficher le tableau des quiz
-            echo "<br/><br/><br/><br/><br/><br/>
+            echo "
                     <h1 class='table_down'>Tableau de vos Quiz terminés :</h1>
                     <table>
                         <thead>
@@ -380,11 +386,12 @@
                 }
             } 
             echo "</tbody>
-                    </table><br/><br/><br/><br/><br/><br/>";
+                    </table>";
             // Fermer le fichier
             fclose($file);
         } else {
             fclose($file);
+            echo "<h2>Aucun quiz n'a été trouvé ! Faites-en un de disponible !</h2>"; 
         }
         // Slider des quiz :
 
@@ -414,14 +421,22 @@
             // Index de l'image à utiliser
             $image_index = 0;
 
+            $compteur = 0;
+
+            $image = $row[5] ;
+            $name = $row[2];
+            $description = $row[3];
+            $quizID = $row[0];
+            $activate = $row[7];
+
             // Vérifier si le fichier contient des données 
             fgetcsv($file);
 
             while (($row = fgetcsv($file)) !== false) {
                 // Boucler à travers les lignes du fichier CSV
-                if ($row[6] == 'active') {
+                if ($row[7] == 'active') {
                     // Récupérer l'URL de l'image ou utiliser l'URL correspondante dans le tableau $image_urls
-                    $image_url = !empty ($row[4]) ? $row[4] : $image_urls[$image_index];
+                    $image_url = !empty ($row[5]) ? $row[5] : $image_urls[$image_index];
 
                     // Afficher la diapositive du carousel avec les données du fichier CSV
                     echo "<div class='item' style='background-image: url(" . $image_url . ");'>
@@ -439,24 +454,45 @@
                     if ($image_index >= count($image_urls)) {
                         $image_index = 0;
                     }
+
+                    $compteur += 1;
+                }
+            }
+
+            if ($compteur == 1 || $row == false) {
+                if ($activate == 'active') {
+                    // Récupérer l'URL de l'image ou utiliser l'URL correspondante dans le tableau $image_urls
+                    $image_url = !empty ($image) ? $image : $image_urls[$image_index];
+
+                    // Afficher la diapositive du carousel avec les données du fichier CSV
+                    echo "<div class='item' style='background-image: url(" . $image_url . ") display: block;'>
+                            <div class='content' style='text-align: center;'>
+                            <div class='name'>" . $name . "</div>
+                            <div class='des'>" . $description . "</div>
+                            <button class='game' onclick='startGame(" . $quizID . ")' style='margin: 0 auto;'>Start</button>";
+
+                    echo "</div>
+                    </div>";
                 }
             }
 
             // Fermer le fichier
             fclose($file);
 
-            echo '</div>
-            <div class="button">
-                <button class="prev"><i class="fa-solid fa-arrow-left"></i></button>
-                <button class="next"><i class="fa-solid fa-arrow-right"></i></button>
-            </div>
-            </div>
+            if ($compteur >= 2) {
+                echo '</div>
+                <div class="button">
+                    <button class="prev"><i class="fa-solid fa-arrow-left"></i></button>
+                    <button class="next"><i class="fa-solid fa-arrow-right"></i></button>
+                </div>
+                </div>
 
-            <!-- Formulaire masqué pour envoyer les informations du quiz en méthode post -->
-            <form id="gameForm" action="game.php" method="post" style="display: none;">
-                <input type="hidden" name="quiz_id" id="quiz_id">
-                <input type="hidden" name="user_id" value="' . $_SESSION['id'] . '">
-            </form>';
+                <!-- Formulaire masqué pour envoyer les informations du quiz en méthode post -->
+                <form id="gameForm" action="game.php" method="post" style="display: none;">
+                    <input type="hidden" name="quiz_id" id="quiz_id">
+                    <input type="hidden" name="user_id" value="' . $_SESSION['id'] . '">
+                </form>';
+            }
 
         } else {
             fclose($file);

@@ -18,6 +18,12 @@
 
     include './components/header.php';
 
+    ?>
+    <!-- <video id="background-video" autoplay loop muted>
+        <source src="./assets/0319.mp4">
+    </video> -->
+    <?php
+
     // Vérifier si les identifiants de l'utilisateur et du quiz sont passés en POST
     if (isset ($_POST['user_id']) && isset ($_POST['quiz_id'])) {
         $user_id = $_POST['user_id'];
@@ -26,9 +32,9 @@
         // Récupération des heures, minutes et secondes depuis le fichier CSV
         $file = fopen('user_quiz.csv', 'r');
 
-        if ($file !== FALSE) {
+        if ($file !== false) {
             fgetcsv($file);
-            while (($row = fgetcsv($file)) !== FALSE) {
+            while (($row = fgetcsv($file)) !== false) {
                 if ($quiz_id == $row[0]) {
                     $time = $row[4];
                     break; // Sortir de la boucle une fois que nous avons trouvé le temps
@@ -72,7 +78,7 @@
                     if (total_seconds < 0) {
                         clearInterval(timer);
                         document.getElementById('timer').innerHTML = 'Temps écoulé';
-                        document.getElementById('quizForm').submit(); // Envoyer le formulaire lorsque le temps est écoulé
+                        document.getElementById('gameForm').submit(); // Envoyer le formulaire lorsque le temps est écoulé
                     }
                 }, 1000);
             </script>";
@@ -96,7 +102,11 @@
         $points = [];
 
         // Bouton de sortie du jeu
-        echo "<form method='post'><input type='submit' name='save_and_exit' value='Enregistrer et Quitter'></form>";
+        echo '            
+        <a href="./index.php">
+            <p class="exit">Exit<i class="fa-solid fa-arrow-right arrow" style="color: #ffffff;"></i></p>
+        </a>';
+
 
 
         // Afficher le titre et la description du quiz
@@ -124,7 +134,7 @@
         shuffle($quiz_questions);
 
         // Afficher les questions et réponses du quiz
-        echo "<form action='game.php' method='post'>";
+        echo "<form action='game.php' method='post' id='gameForm'>";
         foreach ($quiz_questions as $question) {
             echo "<h2>{$question[2]}</h2>";
             // Vérifier si la question est à réponse libre
@@ -247,13 +257,10 @@
         fputcsv($result_file_handle, $result_line);
         fclose($result_file_handle);
 
-        if (isset ($_POST['submit'])) {
+        if (isset($_POST['submit'])) {
             // Redirection sur la page index.php si Soumettre est cliqué
-            // header('location: index.php');
-        } elseif (isset ($_POST['save_and_exit'])) {
-            // Redirection vers une page de confirmation ou d'accueil si Enregistrer et Quitter est cliqué
-            // header('location: quiz_save.php');
-        }
+            header('location: index.php');
+        } 
     }
 
 
