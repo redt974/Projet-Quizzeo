@@ -76,18 +76,18 @@
     <div class="wrapper">
         <h2>Votre Profil</h2>
         <button id="editProfileBtn">Modifier</button>
-        <button id="cancelBtn" style="display: none;">Annuler les modifications</button>
+        <button id="cancelBtn" style="display: none;">Annuler </button>
         <form id="profileForm" action="#" method="post"> <!-- Ajout de method="post" -->
             <div class="input-field mb-3">
-                <input type="text" value="<?php echo $_SESSION['prenom']; ?>" name="prenom" required readonly>
+                <input class="form-control" type="text" value="<?php echo $_SESSION['prenom']; ?>" name="prenom" required readonly>
                 <label>Ton prénom</label>
             </div>
             <div class=" input-field mb-3">
-                <input type="text" value="<?php echo $_SESSION['nom']; ?>" name="nom" required readonly>
+                <input type="text" class="form-control" value="<?php echo $_SESSION['nom']; ?>" name="nom" required readonly>
                 <label>Ton nom</label>
             </div>
             <div class="input-field mb-3">
-                <input type="text" value="<?php echo $_SESSION['email']; ?>" name="email" required readonly>
+                <input type="text" class="form-control" value="<?php echo $_SESSION['email']; ?>" name="email" required readonly>
                 <label>Ton email</label>
             </div>
             <select class="form-select form-select-lg mb-3" aria-label="Large select example" name="role" readonly>
