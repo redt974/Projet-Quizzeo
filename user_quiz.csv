@@ -1,2 +1,3 @@
 id,id_user,titre,description,image,status,active
-1,2,"Découverte de la Science","Testez vos connaissances scientifiques avec ce quiz passionnant !",uploads/65fa15d439046_science.jpg,"en cours",active
+1,2,"Découverte de la Science","Testez vos connaissances scientifiques avec ce quiz passionnant !",uploads/65fa15d439046_science.jpg,lancé,active
+2,2,"Découverte de la ","Testez vos connaissances scientifiques avec ce quiz passionnant !",uploads/65fa15d439046_science.jpg,lancé,desactive

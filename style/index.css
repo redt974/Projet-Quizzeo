@@ -13,13 +13,6 @@ body {
     overflow-x: hidden;
 }
 
-h1 {
-    text-align: center;
-    font-size: 56px;
-    margin: 16px 0;
-
-}
-
 ::-webkit-scrollbar {
     width: 12px;
     height: 12px;
@@ -44,15 +37,6 @@ h1 {
 
 }
 
-@keyframes typing {
-    from {
-        width: 0
-    }
-    to {
-        width: 100%
-    }
-}
-
 @keyframes bounce {
     0%,
     20%,
@@ -71,10 +55,9 @@ h1 {
 h1 {
     color: white;
     text-align: center;
-    font-size: 56px;
+    margin: 10px 0 0 16px;
     overflow: hidden;
     white-space: nowrap;
-    animation: typing 8s steps(10000) forwards;
 }
 
 h2 {
@@ -251,11 +234,36 @@ h2 {
     color: #fff;
     transition: 0.3s;
 }
+* {
+    margin: 0;
+    padding: 0;
 
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+@media print {
+ .table, .table__body {
+  overflow: visible;
+  height: auto !important;
+  width: auto !important;
+ }
+}
+
+/*@page {
+    size: landscape;
+    margin: 0; 
+} */
+
+body {
+    min-height: 100vh;
+    background: url(images/html_table.jpg) center / cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
 main.table {
     width: 82vw;
-    height: 90vh;
     background-color: #fff5;
 
     backdrop-filter: blur(7px);
@@ -280,11 +288,10 @@ main.table {
     width: 35%;
     height: 100%;
     background-color: #fff5;
-    padding: 0 .8rem;
+    padding: 10px .8rem;
     border-radius: 2rem;
-
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
 
     transition: .2s;
@@ -296,17 +303,15 @@ main.table {
     box-shadow: 0 .1rem .4rem #0002;
 }
 
-.table__header .input-group img {
-    width: 1.2rem;
-    height: 1.2rem;
-}
-
 .table__header .input-group input {
-    width: 100%;
     padding: 0 .5rem 0 .3rem;
     background-color: transparent;
     border: none;
     outline: none;
+}
+
+.table__header .input-group i {
+    background-color: transparent;
 }
 
 .table__body {
@@ -322,39 +327,27 @@ main.table {
 }
 
 
-.table__body::-webkit-scrollbar {
+.table__body::-webkit-scrollbar{
     width: 0.5rem;
     height: 0.5rem;
 }
 
-.table__body::-webkit-scrollbar-thumb {
+.table__body::-webkit-scrollbar-thumb{
     border-radius: .5rem;
     background-color: #0004;
     visibility: hidden;
 }
 
-.table__body:hover::-webkit-scrollbar-thumb {
+.table__body:hover::-webkit-scrollbar-thumb{ 
     visibility: visible;
 }
 
-.table_down{
-    margin-top: 200px;
+
+table {
+    width: 100%;
 }
 
-td img {
-    width: 36px;
-    height: 36px;
-    margin-right: .5rem;
-    border-radius: 50%;
-
-    vertical-align: middle;
-}
-
-table,
-th,
-td {    
-    background-color: rgb(255, 255, 255);
-    backdrop-filter: blur(7px);
+table, th, td {
     border-collapse: collapse;
     padding: 1rem;
     text-align: left;
@@ -388,8 +381,7 @@ tbody tr:hover {
 }
 
 tbody tr td,
-tbody tr td p,
-tbody tr td img {
+tbody tr td p{
     transition: .2s ease-in-out;
 }
 
@@ -397,12 +389,6 @@ tbody tr.hide td,
 tbody tr.hide td p {
     padding: 0;
     font: 0 / 0 sans-serif;
-    transition: .2s ease-in-out .5s;
-}
-
-tbody tr.hide td img {
-    width: 0;
-    height: 0;
     transition: .2s ease-in-out .5s;
 }
 
@@ -437,38 +423,3 @@ tbody tr.hide td img {
     }
 }
 
-thead th span.icon-arrow {
-    display: inline-block;
-    width: 1.3rem;
-    height: 1.3rem;
-    border-radius: 50%;
-    border: 1.4px solid transparent;
-
-    text-align: center;
-    font-size: 1rem;
-
-    margin-left: .5rem;
-    transition: .2s ease-in-out;
-}
-
-thead th:hover span.icon-arrow {
-    border: 1.4px solid #6c00bd;
-}
-
-thead th:hover {
-    color: #6c00bd;
-}
-
-thead th.active span.icon-arrow {
-    background-color: #6c00bd;
-    color: #fff;
-}
-
-thead th.asc span.icon-arrow {
-    transform: rotate(180deg);
-}
-
-thead th.active,
-tbody td.active {
-    color: #6c00bd;
-}
