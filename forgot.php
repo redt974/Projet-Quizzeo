@@ -40,60 +40,70 @@ include './components/header.php';
         </form>
 
         <?php
-        // Vérifier si le formulaire a été soumis
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            // Lire le fichier CSV
-            $utilisateurs = array_map('str_getcsv', file('utilisateurs.csv'));
+            if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                // Récupérer l'email de l'utilisateur connecté
+                $email = $_SESSION['email'];
 
-            // Récupérer l'ID de l'utilisateur connecté
-            $email = $_SESSION['email'];
-            $id_utilisateur = null;
-            foreach ($utilisateurs as $utilisateur) {
-                if ($utilisateur[3] == $email) {
-                    $id_utilisateur = $utilisateur[0];
-                    break;
-                }
-            }
+                // Ouvrir le fichier CSV en mode lecture/écriture
+                $file = fopen('utilisateurs.csv', 'r+');
 
-            // Récupérer les valeurs du formulaire
-            $ancien_mot_de_passe = $_POST['ancien_mot_de_passe'];
-            $nouveau_mot_de_passe = $_POST['nouveau_mot_de_passe'];
-            $confirmer_mot_de_passe = $_POST['confirmer_mot_de_passe'];
+                // Vérifier si le fichier a bien été ouvert
+                if ($file !== false) {
+                    $trouve = false; // Indicateur si l'utilisateur est trouvé
 
-            // Rechercher l'utilisateur dans le fichier CSV
-            $trouve = false;
-            foreach ($utilisateurs as &$utilisateur) {
-                if ($utilisateur[0] == $id_utilisateur) {
-                    // Vérifier l'ancien mot de passe
-                    if (password_verify($ancien_mot_de_passe, $utilisateur[4])) {
-                        // Vérifier la correspondance des nouveaux mots de passe
-                        if ($nouveau_mot_de_passe == $confirmer_mot_de_passe) {
-                            // Mettre à jour le mot de passe dans le tableau des utilisateurs
-                            $utilisateur[4] = password_hash($nouveau_mot_de_passe, PASSWORD_DEFAULT);
-                            $trouve = true;
-                            break;
+                    // Parcourir le fichier CSV ligne par ligne
+                    while (($data = fgetcsv($file)) !== false) {
+                        // Vérifier si l'email correspond à celui de l'utilisateur
+                        if ($data[3] == $email) {
+                            // Récupérer l'ID de l'utilisateur
+                            $id_utilisateur = $data[0];
+
+                            // Vérifier l'ancien mot de passe
+                            if (password_verify($_POST['ancien_mot_de_passe'], $data[4])) {
+                                // Vérifier si les nouveaux mots de passe correspondent
+                                if ($_POST['nouveau_mot_de_passe'] == $_POST['confirmer_mot_de_passe']) {
+                                    // Mettre à jour le mot de passe hashé
+                                    $data[4] = password_hash($_POST['nouveau_mot_de_passe'], PASSWORD_DEFAULT);
+                                    $trouve = true; // L'utilisateur est trouvé
+                                } else {
+                                    echo "Les nouveaux mots de passe ne correspondent pas.";
+                                }
+                            } else {
+                                echo "Ancien mot de passe incorrect.";
+                            }
+                        }
+                    }
+
+                    // Fermer le fichier
+                    fclose($file);
+
+                    // Réouvrir le fichier en mode écriture
+                    $file = fopen('utilisateurs.csv', 'w');
+
+                    // Vérifier si le fichier a bien été ouvert
+                    if ($file !== false) {
+                        // Écrire les données mises à jour dans le fichier
+                        foreach ($utilisateurs as $utilisateur) {
+                            fputcsv($file, $utilisateur);
+                        }
+                        // Fermer le fichier
+                        fclose($file);
+                        
+                        // Afficher un message si l'utilisateur a été trouvé et le mot de passe a été mis à jour
+                        if ($trouve) {
+                            echo "Mot de passe modifié avec succès.";
                         } else {
-                            echo "Les nouveaux mots de passe ne correspondent pas.";
+                            echo "Utilisateur introuvable ou erreur de mot de passe.";
                         }
                     } else {
-                        echo "Ancien mot de passe incorrect.";
+                        echo "Erreur lors de l'ouverture du fichier pour l'écriture.";
                     }
+                } else {
+                    echo "Erreur lors de l'ouverture du fichier pour la lecture.";
                 }
             }
-
-            // Écrire les modifications dans le fichier CSV
-            if ($trouve) {
-                $file = fopen('utilisateurs.csv', 'w');
-                foreach ($utilisateurs as $utilisateur) {
-                    fputcsv($file, $utilisateur);
-                }
-                fclose($file);
-                echo "Mot de passe modifié avec succès.";
-            } else {
-                echo "Utilisateur introuvable ou erreur de mot de passe.";
-            }
-        }
         ?>
+
     </div>
 
 </body>
