@@ -5,19 +5,22 @@
     border: 1px solid #ccc;
     border-radius: 5px;
 }
+
 .question {
     font-size: 18px;
     margin-bottom: 15px;
 }
+
 .answer {
     display: block;
     margin-bottom: 10px;
 }
+
 input[type="submit"], .exit {
     height: 100%;
-    background-color: #4caf50;
+    background-color: #8365be;
     color: #fff;
-    padding: 10px 15px;
+    padding: 19px 15px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -25,18 +28,22 @@ input[type="submit"], .exit {
     justify-content: space-evenly;
     align-items: center;
 }
+
 .exit {
     width: 65px;
+    margin-left: auto;
+    padding: 10px 350px;
+    margin-right: auto;
 }
-a{
+
+a {
     text-decoration: none;
 }
-input[type="submit"]:hover, .exit:hover {
-    background-color: #45a049;
-}
-.arrow{
+
+.arrow {
     padding-bottom: 2px;
 }
+
 #background-video {
     width: 100%;
     height: 100%;
@@ -46,5 +53,74 @@ input[type="submit"]:hover, .exit:hover {
     right: 0;
     bottom: 0;
     z-index: -1;
+}
 
+h1 {
+    text-align: center;
+    color: #8365be;
+}
+
+body {
+    background-color: #A494C4;
+}
+
+.card {
+    width: 800px;
+    border-radius: 8px;
+    padding: 30px;
+    text-align: center;
+    backdrop-filter: blur(9px);
+    -webkit-backdrop-filter: blur(9px);
+    background-color: rgba(255, 255, 255, 0.308); /* Ajout d'un fond semi-transparent */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+input:hover {
+    color: #fff;
+    border-color: #fff;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.submit-btn {
+    width: 100%; /* Fixer la largeur à 100% */
+    margin-left: auto;
+    margin-right: auto;
+    height: 100%;
+    text-decoration: none;
+}
+
+.submit-btn:hover {
+    opacity: 0.8; /* Réduire l'opacité lors du survol */
+    cursor: pointer; /* Indiquer que le bouton est cliquable */
+}
+h2, p {
+    color: #fff;
+    font-size: 30px;
+    margin-top: 8px;
+}
+label {
+    width: 100%;
+   
+}
+.btn, .btn-outline-primary {
+    background-color: #fff;
+    padding: 12px 15px;
+    font-size: 22px;
+}
+.btn, .btn-outline-primary:hover {
+    background-color: #fff;
+}
+.form-check {
+    padding: 0;
+}
+#timer {
+    color: #8365be;
+    font-size: 30px;
+    font-weight: bolder;
+}
+i {
+    margin-left: 10px;
+    margin-top: 3px;
 }

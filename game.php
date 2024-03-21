@@ -1,3 +1,9 @@
+<?php 
+    if (isset($_POST['submit'])) {
+        // Redirection sur la page index.php si Soumettre est cliqué
+        header('location: index.php');
+    } 
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -6,12 +12,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Game</title>
     <link rel="icon" href='./assets/quizzeo.ico' />
-    <link rel="stylesheet" href='./style/game.css' />
+    
     <script defer src="https://kit.fontawesome.com/b32d44622b.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href='./style/game.css' />
 </head>
 
 <body>
-
+<video id="background-video" autoplay loop muted>
+        <source src="./assets/0319.mp4">
+    </video>
+    
     <?php
 
     session_start();
@@ -19,9 +31,7 @@
     include './components/header.php';
 
     ?>
-    <!-- <video id="background-video" autoplay loop muted>
-        <source src="./assets/0319.mp4">
-    </video> -->
+    <div class="card">
     <?php
 
     // Vérifier si les identifiants de l'utilisateur et du quiz sont passés en POST
@@ -152,13 +162,19 @@
                 // Mélanger les réponses pour chaque question
                 shuffle($answers);
                 foreach ($answers as $answer) {
-                    echo "<input type='checkbox' name='answer[{$question[0]}][]' value='{$answer[0]}'>{$answer[2]}<br>";
+                    echo "<div class='form-check'>";
+                    echo "<input class='btn-check' type='checkbox' id='btn-check-outlined{$answer[0]}' name='answer[{$question[0]}][]' value='{$answer[0]}' autocomplete='off' style='border: none;'>";
+                    echo "<label class='btn btn-outline-primary' for='btn-check-outlined{$answer[0]}' style='width: 100%; border: none;'>{$answer[2]}</label> ";
+                    echo "</div>";
+                    
+                    
                 }
             }
         }
         echo "<input type='hidden' name='user_id' value='$user_id'>";
         echo "<input type='hidden' name='quiz_id' value='$quiz_id'>";
-        echo "<input type='submit' name='submit' value='Soumettre'>";
+        echo "<br><input class='submit-btn' type='submit' name='submit' value='Soumettre'>";
+
         echo "</form>";
 
         // Fermer les fichiers CSV
@@ -256,16 +272,11 @@
         $result_line = [getNextId($result_file), $user_id, $quiz_id, $score_obtenu, $note_max, $date, 'terminé'];
         fputcsv($result_file_handle, $result_line);
         fclose($result_file_handle);
-
-        if (isset($_POST['submit'])) {
-            // Redirection sur la page index.php si Soumettre est cliqué
-            header('location: index.php');
-        } 
     }
 
 
     ?>
-
+</div>
 
 </body>
 
