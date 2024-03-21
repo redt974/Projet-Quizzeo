@@ -341,7 +341,7 @@
             fgetcsv($file);
 
             while (($row = fgetcsv($file)) !== false) {
-                if ($id_quiz === $row[1]) {
+                if ($id_quiz == $row[0]) {
                     $quiz_titre = $row[2];
                 }
             }
@@ -363,20 +363,28 @@
             // Ignorer la première ligne
             fgetcsv($file);
             // Afficher le tableau des quiz
-            echo "
-                    <h1 class='table_down'>Tableau de vos Quiz terminés :</h1>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Titre</th>
-                                <th>Résultat</th>
-                                <th>Date</th>
-                                <th>Status</th>
-                            </tr>
-                            </thead>
-                            <tbody>";
+
+            echo '<main class="table" id="customers_table">
+            <section class="table__header">
+                <h1>Tableau des quiz :</h1>
+                <div class="input-group">
+                    <input type="search" placeholder="Rechercher...">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+            </section>
+            <section class="table__body">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Titre</th>
+                            <th>Résultat</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                        </tr>
+                        </thead>
+                        <tbody>';
             while (($row = fgetcsv($file)) !== false) {
-                if ($_SESSION['id'] === $row[1]) {
+                if ($_SESSION['id'] == $row[1]) {
                     echo "<tr>
                                 <td>" . quizTitre($row[2]) . "</td>
                                 <td>" . $row[3] . "/" . $row[4] . "</td>
@@ -385,15 +393,52 @@
                             </tr>";
                 }
             } 
-            echo "</tbody>
-                    </table>";
-            // Fermer le fichier
-            fclose($file);
+            echo '</tbody>
+            </table>
+        </section>
+        </main>';
+        fclose($file);
+
         } else {
             fclose($file);
             echo "<h2>Aucun quiz n'a été trouvé ! Faites-en un de disponible !</h2>"; 
         }
         // Slider des quiz :
+
+        function getRole($id_user){
+            $role = "";
+
+            // Ouvrir le fichier CSV en lecture
+            $file = fopen('utilisateurs.csv', 'r');
+            // Ignorer la première ligne
+            fgetcsv($file);
+
+            while (($row = fgetcsv($file)) !== false) {
+                if ($id_user == $row[0]) {
+                    $role = $row[5];
+                }
+            }
+
+            fclose($file);
+            return $role;
+        }
+
+        function isDone($id_quiz){
+
+            // Ouvrir le fichier CSV en lecture
+            $file = fopen('user_result_game.csv', 'r');
+            // Ignorer la première ligne
+            fgetcsv($file);
+
+            while (($row = fgetcsv($file)) !== false) {
+                if ($id_quiz == $row[2]) {
+                    return true;
+                }
+            }
+
+            fclose($file);
+            return false;
+        }
 
         // Ouvrir le fichier CSV en lecture
         $file = fopen('user_quiz.csv', 'r');
@@ -408,35 +453,25 @@
 
             // Tableau des URLs des images
             $image_urls = [
-                "https://i.ibb.co/qCkd9jS/img1.jpg",
-                "https://i.ibb.co/jrRb11q/img2.jpg",
-                "https://i.ibb.co/NSwVv8D/img3.jpg",
-                "https://i.ibb.co/Bq4Q0M8/img4.jpg",
-                "https://img.freepik.com/premium-photo/lakes_972708-78.jpg?size=626&ext=jpg&ga=GA1.1.735520172.1710288000&semt=ais"
+                'school' => "https://myviewboard.com/blog/wp-content/uploads/2020/08/MP0027-01-scaled.jpg",
+                'company'=> "https://img-0.journaldunet.com/la7i_1Y8UNwnsDRdLYjaR2CHPKA=/1500x/smart/da9bdec385c74c66b032708cfe1453a6/ccmcms-jdn/28990032.jpg",
             ];
 
             // Ouvrir le fichier CSV en lecture
             $file = fopen('user_quiz.csv', 'r');
 
-            // Index de l'image à utiliser
-            $image_index = 0;
-
             $compteur = 0;
 
-            $image = $row[5] ;
-            $name = $row[2];
-            $description = $row[3];
-            $quizID = $row[0];
-            $activate = $row[7];
+            $information = [$row[0], $row[1], $row[2], $row[3], $row[4], $row[5], $row[6], $row[7]];
 
             // Vérifier si le fichier contient des données 
             fgetcsv($file);
 
             while (($row = fgetcsv($file)) !== false) {
                 // Boucler à travers les lignes du fichier CSV
-                if ($row[7] == 'active') {
+                if ($row[7] == 'active' && $row[6] == 'lancé' && !isDone($row[0])) {
                     // Récupérer l'URL de l'image ou utiliser l'URL correspondante dans le tableau $image_urls
-                    $image_url = !empty ($row[5]) ? $row[5] : $image_urls[$image_index];
+                    $image_url = !empty ($row[5]) ? $row[5] : $image_urls[getRole($row[1])];
 
                     // Afficher la diapositive du carousel avec les données du fichier CSV
                     echo "<div class='item' style='background-image: url(" . $image_url . ");'>
@@ -448,28 +483,21 @@
                     echo "</div>
                     </div>";
 
-                    // Incrémenter l'index pour la prochaine itération
-                    $image_index++;
-                    // Si l'index dépasse la taille du tableau, réinitialiser à zéro
-                    if ($image_index >= count($image_urls)) {
-                        $image_index = 0;
-                    }
-
                     $compteur += 1;
                 }
             }
 
-            if ($compteur == 1 || $row == false) {
-                if ($activate == 'active') {
+            if ($compteur == 1 && $row == false) {
+                if ($information[7] == 'active' && $information[6] == 'lancé' && !isDone($row[$information[0]])) {
                     // Récupérer l'URL de l'image ou utiliser l'URL correspondante dans le tableau $image_urls
-                    $image_url = !empty ($image) ? $image : $image_urls[$image_index];
+                    $image_url = !empty ($information[5]) ? $information[5] : $image_urls[getRole($row[$information[1]])];
 
                     // Afficher la diapositive du carousel avec les données du fichier CSV
                     echo "<div class='item' style='background-image: url(" . $image_url . ") display: block;'>
                             <div class='content' style='text-align: center;'>
-                            <div class='name'>" . $name . "</div>
-                            <div class='des'>" . $description . "</div>
-                            <button class='game' onclick='startGame(" . $quizID . ")' style='margin: 0 auto;'>Start</button>";
+                            <div class='name'>" . $information[2] . "</div>
+                            <div class='des'>" . $information[3] . "</div>
+                            <button class='game' onclick='startGame(" . $information[0] . ")' style='margin: 0 auto;'>Start</button>";
 
                     echo "</div>
                     </div>";
