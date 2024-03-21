@@ -168,6 +168,9 @@ function getNextQuizId($filename)
 </head>
 
 <body>
+<video id="background-video" autoplay loop muted>
+        <source src="./assets/background.mp4">
+    </video>
     <?php
     if ($_SESSION['role'] == 'school' || $_SESSION['role'] == 'company') {
         include './components/header.php';
@@ -176,33 +179,35 @@ function getNextQuizId($filename)
     }
     ?>
     <form action="quiz.php" method="post" enctype="multipart/form-data">
-        <div class='quiz-titre'>
-            <h1>Création de Quiz</h1>
-            <a href='./index.php'>
+    <a href='./index.php'>
                 <p class="exit">Exit<i class="fa-solid fa-arrow-right" style="color: #ffffff;"></i></p>
             </a>
+    <div class='quiz-titre'>
+            <h1>Création de Quiz</h1>
         </div>
+
         <label for="quizTitle">Titre du Quiz :</label>
         <input type="text" id="quizTitle" name="quizTitle" required>
 
     <label for="quizDescription">Description du Quiz :</label>
     <textarea id="quizDescription" name="quizDescription" rows="4" required></textarea>
 
-    <label for="quizTime">Timer</label>
-    
-
-    <label for="quizHeure">Heure :</label>
+    <div class="timer-inputs">
+    <label for="quizHeure">Heure:</label>
     <input type="number" id="quizHeure" name="quizHeure" required>
 
-    <label for="quizMinute">Minute :</label>
+    <label for="quizMinute">Minute:</label>
     <input type="number" id="quizMinute" name="quizMinute" required>
 
-    <label for="quizSeconde">Seconde :</label>
+    <label for="quizSeconde">Seconde:</label>
     <input type="number" id="quizSeconde" name="quizSeconde" required>
+</div>
+<div id="questionsContainer"></div>
 
-        <div id="questionsContainer"></div>
-
+        <div class="btn1">
         <button type="button" onclick="addQuestion()">Ajouter une question</button>
+        </div>
+        
         <?php
         if ($_SESSION['role'] == 'company') {
             $error_message = '<button type="button" onclick="addQuestionWithFreeResponse()">Ajouter une question avec une réponse libre</button>';
@@ -221,8 +226,9 @@ function getNextQuizId($filename)
         <div id="quizError">
             <?php echo $error_message; ?>
         </div>
-
+        <div class="btn">
     <button type="submit">Enregistrer le Quiz</button>
+    </div>
 </form>
 
     <script src="./script/quiz.js"></script>
