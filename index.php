@@ -200,7 +200,10 @@
 
     ?>
     <?php if ($_SESSION['role'] == 'school' || $_SESSION['role'] == 'company'): ?>
-        <a class="quiz" href="quiz.php">Add Quiz</a>
+        <div class="btnbtn">
+            <h2>Cliquez ici pour créer un nouveau quiz :</h2>
+            <a id="btn" href="quiz.php">Ajouter</a>
+        </div>
         <?php
 
         // Fonction pour activer ou désactiver un utilisateur dans le fichier CSV
