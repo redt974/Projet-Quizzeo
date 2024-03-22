@@ -1,5 +1,5 @@
 id,id_user,titre,description,time,image,status,active
-1,2,"Découverte de la Science","Testez vos connaissances scientifiques avec ce quiz passionnant !",0:0:10,./assets/science.jpg,lance,active
+1,2,"Découverte de la Science","Testez vos connaissances scientifiques avec ce quiz passionnant !",0:0:10,./assets/science.jpg,lance,desactive
 2,2,"Histoire du Monde","Explorez les événements marquants de l'histoire mondiale avec ce quiz.",0:0:10,./assets/world.jpg,lance,active
 3,2,"UEFA Champions League","Testez vos connaissances sur l'UEFA Champions League.",0:0:10,./assets/ucl.jpg,lance,active
 4,2,DBZ,"Quiz passionnant sur Dragon Ball Z.",0:0:10,./assets/dbz.jpg,"en cours",active

@@ -1,6 +1,8 @@
 <?php
     session_start();
 
+    $active_message = "";
+
     $error_message = ""; // Variable pour stocker les messages d'erreur
 
     // Check if the form has been submitted
@@ -30,8 +32,7 @@
                     
                     $userFound = true;
                 } else if ($user[7] != 'active') {
-                    $error_message = "Votre compte a été désactivé ! Revenez plus tard...";
-                    break; // sortir de la boucle 
+                    $active_message = "Votre compte a été désactivé ! Revenez plus tard..."; 
                 }
                 else{
                     $error_message = "L'email ou le mot de passe est incorrect !";
@@ -97,6 +98,7 @@
             </div>
         </div>
         <div id="connexionError">
+            <?php echo $active_message; ?>
             <?php echo $error_message; ?>
         </div>
         <input type="submit" value="Connexion">
