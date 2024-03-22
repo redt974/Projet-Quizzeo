@@ -4,20 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profil</title>
+    <link rel="icon" href='./assets/quizzeo.ico' />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="./style/utilisateu.css">
-    <style>
-        /* @keyframes wavy {
-            0% { transform: translateX(-5px); }
-            50% { transform: translateX(5px); }
-            100% { transform: translateX(-5px); }
-        }
-
-        input:not([readonly]) {
-            animation: wavy 1s infinite;
-        } */
-    </style>
 </head>
 <body>
     <video id="background-video" autoplay loop muted>

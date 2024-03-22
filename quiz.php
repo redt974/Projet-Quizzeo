@@ -79,12 +79,12 @@ $error_message = "";
         $image = '';
     }
 
-        $id_user = $_SESSION['id'];
+    $id_user = $_SESSION['id'];
 
-        // Insertion dans le fichier user_quiz.csv
-        $userQuizFile = 'user_quiz.csv';
-        $userQuizData = [getNextQuizId($userQuizFile), $id_user, $quizTitle, $quizDescription,$quizHeure . ":" . $quizMinute . ":" . $quizSeconde,$image, "en cours", "active"];
-        insertIntoCSV($userQuizFile, $userQuizData);
+    // Insertion dans le fichier user_quiz.csv
+    $userQuizFile = 'user_quiz.csv';
+    $userQuizData = [getNextQuizId($userQuizFile), $id_user, $quizTitle, $quizDescription, $quizHeure . ":" . $quizMinute . ":" . $quizSeconde, $image, "en cours", "active"];
+    insertIntoCSV($userQuizFile, $userQuizData);
 
     // Obtention de l'ID du dernier quiz inséré
     $lastQuizId = getNextQuizId($userQuizFile) - 1;
@@ -214,7 +214,7 @@ function getNextQuizId($filename)
         }
         ?>
         <div class="container-img">
-            <input type="file" name="image" id="file" style="display: none;">
+            <input type="file" name="image" id="file" style="display: none;" accept="image/*"/>
             <div class="img-area">
                 <i class='bx bx-upload icon'></i>
                 <h2>Importer des images</h2>

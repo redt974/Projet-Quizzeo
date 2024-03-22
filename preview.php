@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Accueil</title>
+  <link rel="icon" href='./assets/quizzeo.ico' />
   <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.1/css/all.min.css'>
   <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Montserrat&amp;display=swap"rel="stylesheet'>
   <link rel="stylesheet" href="./style/preview.css">
