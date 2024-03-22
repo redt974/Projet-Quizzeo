@@ -75,7 +75,7 @@
 
         // Effectuer l'action en fonction du bouton cliqué
         if ($action === 'Activer' || $action === 'Désactiver') {
-            active('user_quiz.csv', $quiz_id, 7);
+            active('user_quiz.csv', $quiz_id, 6);
         }
     }
 
@@ -83,11 +83,10 @@
     if ($_SESSION['role'] == 'admin') {
         // Tableau des utilisateurs :
     
-        // Ouvrir le fichier CSV en lecture
         $file = fopen('utilisateurs.csv', 'r');
         // Ignorer la première ligne
         fgetcsv($file);
-
+        
         if (($row = fgetcsv($file)) !== false) {
             // Afficher le tableau des utilisateurs
             echo '<main class="table" id="customers_table">
@@ -95,31 +94,32 @@
                         <h1>Tableau des utilisateurs :</h1>
                         <div class="input-group">
                             <input type="search" id="userSearchInput" placeholder="Rechercher...">
+                            <input type="search" id="userSearchInput" placeholder="Rechercher...">
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </div>
                     </section>
                     <section class="table__body">
                         <table>
                             <thead>
-                            <tr>
-                                <th>Prénom</th>
-                                <th>Nom</th>
-                                <th>Rôle</th>
-                                <th>Status</th>
-                                <th>Activate</th>
-                                <th>Action</th>
-                            </tr>
+                                <tr>
+                                    <th>Prénom</th>
+                                    <th>Nom</th>
+                                    <th>Rôle</th>
+                                    <th>Status</th>
+                                    <th>Activate</th>
+                                    <th>Action</th>
+                                </tr>
                             </thead>
                             <tbody>';
-
+        
             while (($row = fgetcsv($file)) !== false) {
                 if ($row[5] != "admin") {
                     echo "<tr>
                             <td>{$row[1]}</td>
                             <td>" . strtoupper($row[2]) . "</td>
                             <td>" . strtoupper($row[5]) . "</td>
-                            <td><p class='status " . ($row[6] == 'connected' ? 'delivered' : 'cancelled') . "'>• " . ucwords($row[6]) . "</p></td>
-                            <td><p class='status " . ($row[7] == 'active' ? 'delivered' : 'cancelled') . "'>• " . ucwords($row[7]) . "</p></td>
+                            <td><p class='status " . ($row[6] == 'connected' ? 'delivered' : 'cancelled') . "'>• " . strtoupper($row[6]) . "</p></td>
+                            <td><p class='status " . ($row[7] == 'active' ? 'delivered' : 'cancelled') . "'>• " . strtoupper($row[7]) . "</p></td>
                             <td>
                                 <form method='post' action='index.php'>
                                     <input type='hidden' name='user_id' value='{$row[0]}'>
@@ -163,11 +163,12 @@
             $file = fopen('user_quiz.csv', 'r');
             // Ignorer la première ligne
             fgetcsv($file);
-            // Afficher le tableau des utilisateurs
+            // Afficher le tableau des quizs
             echo '<main class="table" id="customers_table">
             <section class="table__header">
                 <h1>Tableau des quiz :</h1>
                 <div class="input-group">
+                    <input type="search" id="adminSearchInput" placeholder="Rechercher...">
                     <input type="search" id="adminSearchInput" placeholder="Rechercher...">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </div>
@@ -187,7 +188,7 @@
                     echo "<tr>
                             <td>" . $row[2] . "</td>
                             <td>" . $row[3] . "</td>
-                            <td><p class='status " . ($row[6] == 'lance' ? 'delivered' : 'cancelled') . "'>• " . ucwords($row[6]) . "</p></td>
+                            <td>• " . $row[6] . "</td>
                             <td>
                                 <form method='post' action='index.php'>
                                     <input type='hidden' name='quiz_id' value='{$row[0]}'>
@@ -342,7 +343,7 @@
                     // Vérifier si l'ID correspond à celui recherché
                     if ($id === $row[0]) {
                         // Inverser l'état du statut dans la colonne spécifiée
-                        $row[6] = ($row[6] == 'lance') ? 'en cours' : 'lance';
+                        $row[6] = ($row[6] == 'lancé') ? 'en cours' : 'lancé';
                     }
                     // Ajouter la ligne au tableau de données
                     $donnees[] = $row;
@@ -375,7 +376,7 @@
                 lancer($quiz_id);
             }
         }
-        
+
         // Tableau des quiz :
     
         function nombreResult($id_quiz) {
@@ -400,7 +401,21 @@
         $file = fopen('user_quiz.csv', 'r');
         // Ignorer la première ligne
         fgetcsv($file);
-
+        
+        // Stocker les données dans un tableau
+        $quizData = array();
+        while (($row = fgetcsv($file)) !== false) {
+            if ($_SESSION['id'] === $row[1]) {
+                $quizData[] = array(
+                    'id' => $row[0],
+                    'title' => $row[2],
+                    'description' => $row[3],
+                    'status' => ucwords($row[6])
+                );
+            }
+        }
+        fclose($file);
+        
         // Afficher le tableau des quiz
             echo '<main class="table" id="customers_table">
                     <section class="table__header">
@@ -431,19 +446,22 @@
                         <td><p class='status " . ($row[6] == 'lance' ? 'delivered' : 'cancelled') . "'>• " . ucwords($row[6]) . "</p></td>
                         <td>                                
                         <form method='post'>
-                            <input type='hidden' name='quiz_id' value='{$row[0]}'>
-                            <input type='hidden' name='status_quiz' value='" . ($row[6] == 'lance' ? 'En cours' : 'Lancé') . "'>
-                            <input type='submit' value='" . ($row[6] == 'lance' ? 'En cours' : 'Lancé') . "'>
+                            <input type='hidden' name='quiz_id' value='{$quiz['id']}'>
+                            <input type='hidden' name='status_quiz' value='" . ($quiz['status'] == 'Lancé' ? 'En cours' : 'Lancé') . "'>
+                            <input type='submit' value='" . ($quiz['status'] == 'Lancé' ? 'En cours' : 'Lancé') . "'>
                         </form>
-                        </td>
-                    </tr>";
-            } else if ($row == false) {
-                echo "<div>Vous n'avez pas encore créer de quiz ! Faites-en un dès maintenant !</div>";
-            }
+                    </td>
+                </tr>";
         }
-            echo '</tbody>
-            </table>
-        </section>
+        
+        // Afficher un message si aucun quiz n'est trouvé
+        if (empty($quizData)) {
+            echo "<tr><td colspan='5'>Vous n'avez pas encore créé de quiz ! Faites-en un dès maintenant !</td></tr>";
+        }
+        
+        echo '</tbody>
+                </table>
+            </section>
         </main>';
 
         echo
@@ -481,27 +499,6 @@
             return $quiz_titre;
         }
 
-        function quizUser($id_user)
-        {
-            $nom = "";
-            $prenom = "";
-
-            // Ouvrir le fichier CSV en lecture
-            $file = fopen('utilisateurs.csv', 'r');
-            // Ignorer la première ligne
-            fgetcsv($file);
-
-            while (($row = fgetcsv($file)) !== false) {
-                if ($id_user == $row[0]) {
-                    $nom = $row[2];
-                    $prenom = $row[1];
-                }
-            }
-
-            fclose($file);
-            return [$nom, $prenom];
-        }
-
         // Ouvrir le fichier CSV en lecture
         $file = fopen('user_result_game.csv', 'r');
         // Ignorer la première ligne
@@ -518,9 +515,9 @@
 
             echo '<main class="table" id="customers_table">
             <section class="table__header">
-                <h1>Tableau des QCM terminés :</h1>
+                <h1>Tableau des quiz :</h1>
                 <div class="input-group">
-                    <input type="search" placeholder="Rechercher...">
+                <input type="search" id="searchInput" placeholder="Rechercher...">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </div>
             </section>
@@ -529,7 +526,6 @@
                     <thead>
                         <tr>
                             <th>Titre</th>
-                            <th>Utilisateur</th>
                             <th>Résultat</th>
                             <th>Date</th>
                             <th>Status</th>
@@ -537,16 +533,12 @@
                         </thead>
                         <tbody>';
             while (($row = fgetcsv($file)) !== false) {
-                if ($row == false) {
-                    echo "<div>Personne n'a fait l'un de vos quiz ! Revenez plus tard !</div>";
-                } else if ($row[4] != -1 ){
-                    $user = quizUser($row[1]);
+                if ($_SESSION['id'] == $row[1]) {
                     echo "<tr>
-                                <td>" . ucwords(quizTitre($row[2])) . "</td>
-                                <td>" . $user[0] . " ".$user[1]."</td>
+                                <td>" . quizTitre($row[2]) . "</td>
                                 <td>" . $row[3] . "/" . $row[4] . "</td>
                                 <td>" . $row[5] . "</td>
-                                <td><p class='status shipped'>" . ucwords($row[6]) . "</p></td>
+                                <td>" . $row[6] . "</td>
                             </tr>";
                 }
             } 
@@ -554,132 +546,19 @@
             </table>
         </section>
         </main>';
+        echo '<script>
+        document.getElementById("searchInput").addEventListener("input", function() {
+            let input = document.getElementById("searchInput").value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); 
+            let table = document.getElementById("quizTableBody");
+            Array.from(table.getElementsByTagName("tr")).forEach(function(row) {
+                let text = row.getElementsByTagName("td")[0].textContent.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); 
+                row.style.display = text.includes(input) ? "" : "none"; // Afficher ou masquer la ligne en fonction de la correspondance
+            });
+        });
+    </script>';
         fclose($file);
-        }
 
-        if ($_SESSION['role'] == 'company'){
-
-            // Ouvrir le fichier CSV en lecture
-            $file = fopen('user_quiz_free_answer.csv', 'r');
-            // Ignorer la première ligne
-            fgetcsv($file);
-
-            if (($row = fgetcsv($file)) !== false) {
-                fclose($file);
-
-                // Ouvrir le fichier CSV en lecture
-                $file = fopen('user_quiz_free_answer.csv', 'r');
-                // Ignorer la première ligne
-                fgetcsv($file);
-                // Afficher le tableau des quiz
-
-                echo '<main class="table" id="customers_table">
-                <section class="table__header">
-                    <h1>Tableau des quiz à réponses libres :</h1>
-                    <div class="input-group">
-                        <input type="search" placeholder="Rechercher...">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </div>
-                </section>
-                <section class="table__body">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Titre</th>
-                                <th>Utilisateur</th>
-                                <th>Date</th>
-                                <th>Status</th>
-                                <th>Résultat</th>
-                            </tr>
-                            </thead>
-                            <tbody>';
-                while (($row = fgetcsv($file)) !== false) {
-                    if ($row == false) {
-                        echo "<div>Personne n'a fait l'un de vos quiz ! Revenez plus tard !</div>";
-                    } else {
-                        $user = quizUser($row[1]);
-                        echo "<tr>
-                                <td>" . ucwords(quizTitre($row[2])) . "</td>
-                                <td>" . $user[0] . " ".$user[1]."</td>
-                                <td>" . $row[5] . "</td>
-                                <td><p class='status shipped'>" . ucwords($row[6]) . "</p></td>
-                                <td>
-                                    <form id='gameForm' action='index.php' method='post'>
-                                        <input type='hidden' name='view_user_id' value='{$_SESSION['id']}' />
-                                        <input type='hidden' name='view_quiz_id' value='{$row[2]}'>
-                                        <input type='submit' value='Voir'>    
-                                    </form>
-                                </td>
-                            </tr>";
-                    }
-                } 
-                echo '</tbody>
-                </table>
-            </section>
-            </main>';
-            fclose($file);
-
-            echo "<h1>↓ Les réponses au quiz s'afficheront juste en dessous ! ↓</h1>";
-
-            }
-
-            function questionTitre($question_id){
-                $titre = "";
-    
-                // Ouvrir le fichier CSV en lecture
-                $file = fopen('user_quiz_question.csv', 'r');
-                // Ignorer la première ligne
-                fgetcsv($file);
-    
-                while (($row = fgetcsv($file)) !== false) {
-                    if ($question_id == $row[0]) {
-                        $titre = $row[2];
-                    }
-                }
-    
-                fclose($file);
-                return $titre;
-            }
-
-            // Vérifier si un utilisateur a été sélectionné pour activer ou désactiver
-            if (isset ($_POST['view_quiz_id']) && isset ($_POST['view_user_id'])) {
-                // Récupérer l'ID de l'utilisateur et l'action à effectuer depuis le formulaire
-                $quiz_id = $_POST['view_quiz_id'];
-                $user_id = $_POST['view_user_id'];
-
-                // Ouvrir le fichier CSV en lecture
-                $file = fopen('user_quiz_free_answer.csv', 'r');
-                // Ignorer la première ligne
-                fgetcsv($file);
-                // Afficher des réponses libres
-
-                echo '<main class="table">
-                <section>
-                    <h1>Réponses au Quiz :</h1>
-                </section>
-                <section class="table__body">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Question</th>
-                                <th>Réponse</th>
-                            </tr>
-                            </thead>
-                            <tbody>'; 
-                while (($row = fgetcsv($file)) !== false) {
-                 if ($row == false) {
-                        echo "<div>Personne n'a fait l'un de vos quiz ! Revenez plus tard !</div>";
-                    } else {
-                        echo "<tr>
-                                <td>". questionTitre($row[3]) ."</td>
-                                <td>" . $row[4] . "</td>
-                            </tr>";
-                    }
-                }
-                echo '</tbody>
-                </table>
-            </section>
-            </main>';
+        } else {
             fclose($file);
             }
         } 
@@ -805,7 +684,7 @@
             return $role;
         }
 
-        function isDone($id_user, $id_quiz){
+        function isDone($id_quiz){
 
             // Ouvrir le fichier CSV en lecture
             $file = fopen('user_result_game.csv', 'r');
@@ -813,7 +692,7 @@
             fgetcsv($file);
 
             while (($row = fgetcsv($file)) !== false) {
-                if ($id_quiz == $row[2] && $id_user == $row[1]) {
+                if ($id_quiz == $row[2]) {
                     return true;
                 }
             }
@@ -851,7 +730,7 @@
 
             while (($row = fgetcsv($file)) !== false) {
                 // Boucler à travers les lignes du fichier CSV
-                if ($row[7] == 'active' && $row[6] == 'lance' && !isDone($_SESSION['id'], $row[0])) {
+                if ($row[7] == 'active' && $row[6] == 'lancé' && !isDone($row[0])) {
                     // Récupérer l'URL de l'image ou utiliser l'URL correspondante dans le tableau $image_urls
                     $image_url = !empty ($row[5]) ? $row[5] : $image_urls[getRole($row[1])];
 
@@ -870,7 +749,7 @@
             }
 
             if ($compteur == 1 && $row == false) {
-                if ($information[7] == 'active' && $information[6] == 'lance' && !isDone($_SESSION['id'], $row[$information[0]])) {
+                if ($information[7] == 'active' && $information[6] == 'lancé' && !isDone($row[$information[0]])) {
                     // Récupérer l'URL de l'image ou utiliser l'URL correspondante dans le tableau $image_urls
                     $image_url = !empty ($information[5]) ? $information[5] : $image_urls[getRole($row[$information[1]])];
 
