@@ -38,14 +38,12 @@ body {
 }
 
 h1 {
-    background-color: #0000002d;
-    border-radius: 1rem;
     color: white;
     text-align: center;
     overflow: hidden;
     white-space: nowrap;
     margin: 0;
-    padding: 0 25px;
+    padding: 0 10px 0;
 }
 
 h2 {
@@ -261,7 +259,7 @@ main.table {
     width: 97.5%;
     height: 12%;
     background-color: #fff4;
-    padding: 0rem .5rem 0rem 0;
+    padding: .8rem .5rem;
     margin: .8rem 1rem;
     display: flex;
     justify-content: space-between;
@@ -391,7 +389,7 @@ tbody tr.hide td i {
 }
 
 .status {
-    padding: .4rem 0;
+    padding: 8px 0;
     border-radius: 2rem;
     text-align: center;
     margin-top: 18px;
