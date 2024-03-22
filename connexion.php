@@ -31,6 +31,7 @@
                     $userFound = true;
                 } else if ($user[7] != 'active') {
                     $error_message = "Votre compte a été désactivé ! Revenez plus tard...";
+                    break; // sortir de la boucle 
                 }
                 else{
                     $error_message = "L'email ou le mot de passe est incorrect !";
@@ -98,16 +99,6 @@
         <div id="connexionError">
             <?php echo $error_message; ?>
         </div>
-        <script defer>
-            function validateForm($message) {             
-                var captchaResponse = grecaptcha.getResponse();             
-                while (captchaResponse == "") {                 
-                    document.getElementById("connexionError").innerHTML = "<h4>".$message."</h4>";
-                    return false;             
-                }             
-                return true; 
-            } 
-        </script>
         <input type="submit" value="Connexion">
     </form>
     <div>
