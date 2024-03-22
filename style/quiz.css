@@ -23,7 +23,6 @@ form, .form {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
 }
 form, .form{
-    margin: 50px auto;
     backdrop-filter: blur(9px);
     -webkit-backdrop-filter: blur(9px);
     background-color: rgba(255, 255, 255, 0.308); /* Ajout d'un fond semi-transparent */
@@ -84,9 +83,6 @@ button, .exit {
 a{
     text-decoration: none;
 }
-button:hover {
-    background-color: rgba(255, 255, 255, 0.308); 
-}
 
 .container-answer {
     margin-bottom: 10px;
@@ -94,6 +90,16 @@ button:hover {
 
 .container-answer form {
     margin-bottom: 5px;
+}
+
+.answerForm{
+    margin: 20px 0;
+}
+
+.answersContainer{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
 }
 
 .container-img {
@@ -210,4 +216,7 @@ button:hover {
     cursor: pointer;
     text-align: center;
     margin-top: 30px;
+}
+button{
+    margin-right: 15px;
 }

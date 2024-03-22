@@ -35,9 +35,14 @@
     <?php
 
     // Vérifier si les identifiants de l'utilisateur et du quiz sont passés en POST
-    if (isset ($_POST['user_id']) && isset ($_POST['quiz_id'])) {
-        $user_id = $_POST['user_id'];
-        $quiz_id = $_POST['quiz_id'];
+    if (isset ($_GET['user_id']) && isset ($_GET['quiz_id'])) {
+        $user_id = $_GET['user_id'];
+        $quiz_id = $_GET['quiz_id'];
+
+        if ($_SESSION['id'] != $user_id){
+            // Redirection sur la page index.php 
+            header('location: index.php');
+        }
 
         // Récupération des heures, minutes et secondes depuis le fichier CSV
         $file = fopen('user_quiz.csv', 'r');
@@ -47,7 +52,6 @@
             while (($row = fgetcsv($file)) !== false) {
                 if ($quiz_id == $row[0]) {
                     $time = $row[4];
-                    break; // Sortir de la boucle une fois que nous avons trouvé le temps
                 }
             }
             fclose($file);
@@ -208,6 +212,24 @@
             fclose($file_name_handle);
             return $last_id;
         }
+
+        // function countResult($id_quiz){
+        //     $result = 0;
+
+        //     // Ouvrir le fichier CSV en lecture
+        //     $file = fopen('user_quiz.csv', 'r');
+        //     // Ignorer la première ligne
+        //     fgetcsv($file);
+
+        //     while (($row = fgetcsv($file)) !== false) {
+        //         if ($id_quiz == $row[2]) {
+        //             $result += 1 ;
+        //         }
+        //     }
+
+        //     fclose($file);
+        //     return $result;
+        // }
 
         // Calcul du score des réponses sélectionnées 
         $score_obtenu = 0;

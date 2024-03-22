@@ -94,7 +94,7 @@
                     <section class="table__header">
                         <h1>Tableau des utilisateurs :</h1>
                         <div class="input-group">
-                            <input type="search" placeholder="Rechercher...">
+                            <input type="search" id="userSearchInput" placeholder="Rechercher...">
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </div>
                     </section>
@@ -135,6 +135,18 @@
             </section>
             </main>';
 
+            echo
+            '<script>
+            document.getElementById("userSearchInput").addEventListener("input", function() {
+                var filter0 = this.value.toUpperCase();
+                Array.from(document.getElementById("customers_table").getElementsByTagName("tr")).forEach(row => {
+                    var cells0 = row.getElementsByTagName("td");
+                    row.style.display = Array.from(cells0).some(cell0 => cell0.textContent.toUpperCase().includes(filter0)) ? "" : "none";
+                });
+            });
+        </script>
+        ';
+
             // Fermer le fichier
             fclose($file);
         
@@ -156,7 +168,7 @@
             <section class="table__header">
                 <h1>Tableau des quiz :</h1>
                 <div class="input-group">
-                    <input type="search" placeholder="Rechercher...">
+                    <input type="search" id="adminSearchInput" placeholder="Rechercher...">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </div>
             </section>
@@ -191,6 +203,18 @@
             </section>
             </main>';
 
+            echo
+            '<script>
+            document.getElementById("adminSearchInput").addEventListener("input", function() {
+                var filter0 = this.value.toUpperCase();
+                Array.from(document.getElementById("customers_table").getElementsByTagName("tr")).forEach(row => {
+                    var cells0 = row.getElementsByTagName("td");
+                    row.style.display = Array.from(cells0).some(cell0 => cell0.textContent.toUpperCase().includes(filter0)) ? "" : "none";
+                });
+            });
+        </script>
+        ';
+
             // Fermer le fichier
             fclose($file);
         } else {
@@ -218,6 +242,27 @@
             return $quiz_titre;
         }
 
+        function quizUser($id_user)
+        {
+            $nom = "";
+            $prenom = "";
+
+            // Ouvrir le fichier CSV en lecture
+            $file = fopen('utilisateurs.csv', 'r');
+            // Ignorer la première ligne
+            fgetcsv($file);
+
+            while (($row = fgetcsv($file)) !== false) {
+                if ($id_user == $row[0]) {
+                    $nom = $row[2];
+                    $prenom = $row[1];
+                }
+            }
+
+            fclose($file);
+            return [$nom, $prenom];
+        }
+
         // Ouvrir le fichier CSV en lecture
         $file = fopen('user_result_game.csv', 'r');
         // Ignorer la première ligne
@@ -234,7 +279,7 @@
 
             echo '<main class="table" id="customers_table">
             <section class="table__header">
-                <h1>Tableau des quiz :</h1>
+                <h1>Tableau des quiz terminés :</h1>
                 <div class="input-group">
                     <input type="search" placeholder="Rechercher...">
                     <i class="fa-solid fa-magnifying-glass"></i>
@@ -265,12 +310,11 @@
           echo      '</table>
                 </section>
                 </main>';
-                fclose($file);
             } 
         } else {
-            fclose($file);
             echo "<h2>Aucun quiz n'a été terminé ! Revenez plus tard !</h2>"; 
         }
+        fclose($file);
     }
 
     ?>
@@ -362,7 +406,7 @@
                     <section class="table__header">
                         <h1>Tableau des quiz :</h1>
                         <div class="input-group">
-                            <input type="search" placeholder="Rechercher...">
+                            <input type="search" id="SearchInput" placeholder="Rechercher...">
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </div>
                     </section>
@@ -401,6 +445,18 @@
             </table>
         </section>
         </main>';
+
+        echo
+        '<script>
+        document.getElementById("SearchInput").addEventListener("input", function() {
+            var filter0 = this.value.toUpperCase();
+            Array.from(document.getElementById("customers_table").getElementsByTagName("tr")).forEach(row => {
+                var cells0 = row.getElementsByTagName("td");
+                row.style.display = Array.from(cells0).some(cell0 => cell0.textContent.toUpperCase().includes(filter0)) ? "" : "none";
+            });
+        });
+    </script>
+    ';
         // Fermer le fichier
         fclose($file);
 
@@ -683,7 +739,7 @@
         <section class="table__header">
             <h1>Tableau des quiz terminés :</h1>
             <div class="input-group">
-                <input type="search" placeholder="Rechercher...">
+                <input type="search" id="SearchInput" placeholder="Rechercher...">
                 <i class="fa-solid fa-magnifying-glass"></i>
             </div>
         </section>
@@ -715,6 +771,18 @@
         </table>
     </section>
     </main>';
+
+    echo
+    '<script>
+    document.getElementById("SearchInput").addEventListener("input", function() {
+        var filter0 = this.value.toUpperCase();
+        Array.from(document.getElementById("customers_table").getElementsByTagName("tr")).forEach(row => {
+            var cells0 = row.getElementsByTagName("td");
+            row.style.display = Array.from(cells0).some(cell0 => cell0.textContent.toUpperCase().includes(filter0)) ? "" : "none";
+        });
+    });
+</script>
+';
     fclose($file);
 
 
@@ -829,8 +897,8 @@
                 </div>
                 </div>
 
-                <!-- Formulaire masqué pour envoyer les informations du quiz en méthode post -->
-                <form id="gameForm" action="game.php" method="post" style="display: none;">
+                <!-- Formulaire masqué pour envoyer les informations du quiz en méthode get -->
+                <form id="gameForm" action="game.php" method="get" style="display: none;">
                     <input type="hidden" name="quiz_id" id="quiz_id">
                     <input type="hidden" name="user_id" value="' . $_SESSION['id'] . '">
                 </form>';
