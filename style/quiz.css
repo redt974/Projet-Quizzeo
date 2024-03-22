@@ -1,19 +1,26 @@
+/* Définir les styles globaux pour le corps */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    background-color: #f4f4f4; /* Couleur de fond */
     margin: 0;
     padding: 0;
 }
-.quiz-titre{
+
+/* Styles pour le titre du quiz */
+.quiz-titre {
     display: flex;
     justify-content: space-around;
     align-items: center;
     width:100%;
 }
+
+/* Styles pour le titre principal */
 h1 {
-    color: #8365be;
-    text-align:center;
+    color: #8365be; /* Couleur du texte */
+    text-align: center;
 }
+
+/* Styles pour les formulaires */
 form, .form {
     max-width: 600px;
     margin: 20px auto;
@@ -22,18 +29,24 @@ form, .form {
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
 }
-form, .form{
+
+/* Styles supplémentaires pour les formulaires */
+form, .form {
     margin: 50px auto;
     backdrop-filter: blur(9px);
     -webkit-backdrop-filter: blur(9px);
-    background-color: rgba(255, 255, 255, 0.308); /* Ajout d'un fond semi-transparent */
+    background-color: rgba(255, 255, 255, 0.308); 
 }
+
+/* Styles pour les étiquettes */
 label {
     display: block;
     margin-bottom: 5px;
     color: #111;
     font-weight: bold;
 }
+
+/* Styles pour les champs de saisie et les sélecteurs */
 input[type="text"],
 input[type="number"],
 select {
@@ -45,34 +58,42 @@ select {
     border-radius: 4px;
     backdrop-filter: blur(9px);
     -webkit-backdrop-filter: blur(9px);
-    background-color: rgba(255, 255, 255, 0.308); /* Ajout d'un fond semi-transparent */
+    background-color: rgba(255, 255, 255, 0.308); 
 }
+
+/* Supprimer les boutons de rotation par défaut pour les entrées numériques */
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
-#quizDescription{
-  font-family: Arial, sans-serif;
-  height: 150px;
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-  overflow-y: auto;
-  word-wrap: break-word;
-  resize: none;
-  backdrop-filter: blur(9px);
-  -webkit-backdrop-filter: blur(9px);
-  background-color: rgba(255, 255, 255, 0.308); /* Ajout d'un fond semi-transparent */
+
+/* Styles pour la description du quiz */
+#quizDescription {
+    font-family: Arial, sans-serif;
+    height: 150px;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    word-wrap: break-word;
+    resize: none;
+    backdrop-filter: blur(9px);
+    -webkit-backdrop-filter: blur(9px);
+    background-color: rgba(255, 255, 255, 0.308); 
 }
-.exit{
+
+/* Styles pour le bouton de sortie */
+.exit {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 5px;
 }
+
+/* Styles pour les boutons et la sortie */
 button, .exit {
     background-color: #8365be;
     color: #fff;
@@ -81,97 +102,118 @@ button, .exit {
     border-radius: 4px;
     cursor: pointer;
 }
-a{
+
+/* Styles pour les liens */
+a {
     text-decoration: none;
 }
-button:hover {
-    background-color: rgba(255, 255, 255, 0.308); 
-}
 
+/* Styles pour le conteneur de réponse */
 .container-answer {
     margin-bottom: 10px;
 }
 
+/* Styles supplémentaires pour les formulaires de réponse */
 .container-answer form {
     margin-bottom: 5px;
 }
 
+/* Styles pour le conteneur d'image */
 .container-img {
-	max-width: 400px;
-	width: 100%;
+    max-width: 400px;
+    width: 100%;
     background-color: rgba(255, 255, 255, 0.308); 
-	padding: 30px;
-	border-radius: 30px;
+    padding: 30px;
+    border-radius: 30px;
     border: 1px solid black;
     display: flex;
     align-items: center;
     flex-direction: column;
     margin: 50px auto;
 }
+
+/* Styles pour la zone d'image */
 .img-area {
-	position: relative;
-	width: 100%;
-	height: 240px;
-	background: var(--grey);
-	margin-bottom: 30px;
-	border-radius: 15px;
-	overflow: hidden;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	flex-direction: column;
+    position: relative;
+    width: 100%;
+    height: 240px;
+    background: var(--grey);
+    margin-bottom: 30px;
+    border-radius: 15px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
+
+/* Styles pour l'icône de la zone d'image */
 .img-area .icon {
-	font-size: 100px;
+    font-size: 100px;
 }
+
+/* Styles pour les en-têtes de la zone d'image */
 .img-area h3 {
-	font-size: 20px;
-	font-weight: 500;
-	margin-bottom: 6px;
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 6px;
 }
+
+/* Styles pour les paragraphes de la zone d'image */
 .img-area p {
-	color: #999;
+    color: #999;
 }
+
+/* Styles pour les spans de la zone d'image */
 .img-area p span {
-	font-weight: 600;
+    font-weight: 600;
 }
+
+/* Styles pour les images */
 .img-area img {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
-	object-position: center;
-	z-index: 100;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    z-index: 100;
 }
+
+/* Styles pour le pseudo-élément ::before de la zone d'image */
 .img-area::before {
-	content: attr(data-img);
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background: rgba(0, 0, 0, .5);
-	color: #fff;
-	font-weight: 500;
-	text-align: center;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	pointer-events: none;
-	opacity: 0;
-	transition: all .3s ease;
-	z-index: 200;
+    content: attr(data-img);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, .5);
+    color: #fff;
+    font-weight: 500;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+    opacity: 0;
+    transition: all .3s ease;
+    z-index: 200;
 }
+
+/* Styles supplémentaires pour le pseudo-élément ::before de la zone d'image active */
 .img-area.active:hover::before {
-	opacity: 1;
+    opacity: 1;
 }
+
+/* Styles pour le conteneur d'image sélectionnée */
 .select-image {
-	display: flex;
+    display: flex;
     align-items: center;
 }
 
+/* Styles pour la vidéo de fond */
 #background-video {
     width: 100%;
     height: 100%;
@@ -181,9 +223,10 @@ button:hover {
     right: 0;
     bottom: 0;
     z-index: -1;
-
 }
-.btn{
+
+/* Styles des boutons */
+.btn {
     background-color: #8365be;
     color: #fff;
     padding: 10px 15px;
@@ -192,15 +235,21 @@ button:hover {
     cursor: pointer;
     text-align: center;
 }
+
+/* Styles pour les entrées du minuteur */
 .timer-inputs {
     display: flex;
     align-items: center;
-    gap: 10px; /* Espacement entre les éléments */
+    gap: 10px; 
 }
+
+/* Styles pour les étiquettes et les entrées du minuteur */
 .timer-inputs label,
 .timer-inputs input {
-    margin-bottom: 0; /* Supprimer le margin-bottom */
+    margin-bottom: 0; 
 }
+
+/* Styles supplémentaires pour les boutons */
 .btn1 {
     background-color: #8365be;
     color: #fff;
@@ -210,4 +259,9 @@ button:hover {
     cursor: pointer;
     text-align: center;
     margin-top: 30px;
+}
+
+/* Additional button margin */
+button {
+    margin-right: 15px;
 }

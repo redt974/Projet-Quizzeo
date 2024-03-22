@@ -83,35 +83,34 @@
     if ($_SESSION['role'] == 'admin') {
         // Tableau des utilisateurs :
     
-        // Ouvrir le fichier CSV en lecture
         $file = fopen('utilisateurs.csv', 'r');
         // Ignorer la première ligne
         fgetcsv($file);
-
+        
         if (($row = fgetcsv($file)) !== false) {
             // Afficher le tableau des utilisateurs
             echo '<main class="table" id="customers_table">
                     <section class="table__header">
                         <h1>Tableau des utilisateurs :</h1>
                         <div class="input-group">
-                            <input type="search" placeholder="Rechercher...">
+                            <input type="search" id="userSearchInput" placeholder="Rechercher...">
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </div>
                     </section>
                     <section class="table__body">
                         <table>
                             <thead>
-                            <tr>
-                                <th>Prénom</th>
-                                <th>Nom</th>
-                                <th>Rôle</th>
-                                <th>Status</th>
-                                <th>Activate</th>
-                                <th>Action</th>
-                            </tr>
+                                <tr>
+                                    <th>Prénom</th>
+                                    <th>Nom</th>
+                                    <th>Rôle</th>
+                                    <th>Status</th>
+                                    <th>Activate</th>
+                                    <th>Action</th>
+                                </tr>
                             </thead>
                             <tbody>';
-
+        
             while (($row = fgetcsv($file)) !== false) {
                 if ($row[5] != "admin") {
                     echo "<tr>
@@ -133,7 +132,8 @@
             echo '</tbody>
                 </table>
             </section>
-            </main>';
+        </main>';
+  
 
             // Fermer le fichier
             fclose($file);
@@ -151,12 +151,12 @@
             $file = fopen('user_quiz.csv', 'r');
             // Ignorer la première ligne
             fgetcsv($file);
-            // Afficher le tableau des utilisateurs
+            // Afficher le tableau des quizs
             echo '<main class="table" id="customers_table">
             <section class="table__header">
                 <h1>Tableau des quiz :</h1>
                 <div class="input-group">
-                    <input type="search" placeholder="Rechercher...">
+                    <input type="search" id="adminSearchInput" placeholder="Rechercher...">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </div>
             </section>
@@ -190,6 +190,17 @@
                 </table>
             </section>
             </main>';
+            echo
+            '<script>
+            document.getElementById("adminSearchInput").addEventListener("input", function() {
+                var filter0 = this.value.toUpperCase();
+                Array.from(document.getElementById("customers_table").getElementsByTagName("tr")).forEach(row => {
+                    var cells0 = row.getElementsByTagName("td");
+                    row.style.display = Array.from(cells0).some(cell0 => cell0.textContent.toUpperCase().includes(filter0)) ? "" : "none";
+                });
+            });
+        </script>
+        ';
 
             // Fermer le fichier
             fclose($file);
@@ -281,53 +292,83 @@
         $file = fopen('user_quiz.csv', 'r');
         // Ignorer la première ligne
         fgetcsv($file);
-
-        // Afficher le tableau des quiz
-            echo '<main class="table" id="customers_table">
-                    <section class="table__header">
-                        <h1>Tableau des quiz :</h1>
-                        <div class="input-group">
-                            <input type="search" placeholder="Rechercher...">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                        </div>
-                    </section>
-                    <section class="table__body">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Titre</th>
-                                    <th>Description</th>
-                                    <th>Nombre de réponses</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>';
+        
+        // Stocker les données dans un tableau
+        $quizData = array();
         while (($row = fgetcsv($file)) !== false) {
             if ($_SESSION['id'] === $row[1]) {
-                echo "<tr>
-                        <td>" . $row[2] . "</td>
-                        <td>" . $row[3] . "</td>
-                        <td>" . nombreResult($row[0]) . "</td>
-                        <td>" . ucwords($row[6]) . "</td>
-                        <td>                                
-                        <form method='post'>
-                            <input type='hidden' name='quiz_id' value='{$row[0]}'>
-                            <input type='hidden' name='status_quiz' value='" . ($row[6] == 'lancé' ? 'En cours' : 'Lancé') . "'>
-                            <input type='submit' value='" . ($row[6] == 'lancé' ? 'En cours' : 'Lancé') . "'>
-                        </form>
-                        </td>
-                    </tr>";
-            } else if ($row == false) {
-                echo "<div>Vous n'avez pas encore créer de quiz ! Faites-en un dès maintenant !</div>";
+                $quizData[] = array(
+                    'id' => $row[0],
+                    'title' => $row[2],
+                    'description' => $row[3],
+                    'status' => ucwords($row[6])
+                );
             }
         }
-            echo '</tbody>
-            </table>
-        </section>
-        </main>';
-        // Fermer le fichier
         fclose($file);
+        
+        // Afficher le tableau des quiz
+        echo '<main class="table" id="customers_table">
+                <section class="table__header">
+                    <h1>Tableau des quiz :</h1>
+                    <div class="input-group">
+                        <input type="search" id="searchInput" placeholder="Rechercher...">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                </section>
+                <section class="table__body">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Titre</th>
+                                <th>Description</th>
+                                <th>Nombre de réponses</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="quizTableBody">';
+        
+        // Afficher les données des quiz
+        foreach ($quizData as $quiz) {
+            echo "<tr>
+                    <td>{$quiz['title']}</td>
+                    <td>{$quiz['description']}</td>
+                    <td>" . nombreResult($quiz['id']) . "</td>
+                    <td>{$quiz['status']}</td>
+                    <td>                                
+                        <form method='post'>
+                            <input type='hidden' name='quiz_id' value='{$quiz['id']}'>
+                            <input type='hidden' name='status_quiz' value='" . ($quiz['status'] == 'Lancé' ? 'En cours' : 'Lancé') . "'>
+                            <input type='submit' value='" . ($quiz['status'] == 'Lancé' ? 'En cours' : 'Lancé') . "'>
+                        </form>
+                    </td>
+                </tr>";
+        }
+        
+        // Afficher un message si aucun quiz n'est trouvé
+        if (empty($quizData)) {
+            echo "<tr><td colspan='5'>Vous n'avez pas encore créé de quiz ! Faites-en un dès maintenant !</td></tr>";
+        }
+        
+        echo '</tbody>
+                </table>
+            </section>
+        </main>';
+        
+echo '<script>
+        document.getElementById("searchInput").addEventListener("input", function() {
+            let input = document.getElementById("searchInput").value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); 
+            let table = document.getElementById("quizTableBody");
+            Array.from(table.getElementsByTagName("tr")).forEach(function(row) {
+                let text = row.getElementsByTagName("td")[0].textContent.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); 
+                row.style.display = text.includes(input) ? "" : "none"; // Afficher ou masquer la ligne en fonction de la correspondance
+            });
+        });
+    </script>';
+
+
+        
         ?>
     <?php endif; ?>
     <?php if ($_SESSION['role'] == 'user'): ?>
@@ -371,7 +412,7 @@
             <section class="table__header">
                 <h1>Tableau des quiz :</h1>
                 <div class="input-group">
-                    <input type="search" placeholder="Rechercher...">
+                <input type="search" id="searchInput" placeholder="Rechercher...">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </div>
             </section>
@@ -400,6 +441,16 @@
             </table>
         </section>
         </main>';
+        echo '<script>
+        document.getElementById("searchInput").addEventListener("input", function() {
+            let input = document.getElementById("searchInput").value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); 
+            let table = document.getElementById("quizTableBody");
+            Array.from(table.getElementsByTagName("tr")).forEach(function(row) {
+                let text = row.getElementsByTagName("td")[0].textContent.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); 
+                row.style.display = text.includes(input) ? "" : "none"; // Afficher ou masquer la ligne en fonction de la correspondance
+            });
+        });
+    </script>';
         fclose($file);
 
         } else {
