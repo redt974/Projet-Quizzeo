@@ -1,27 +1,22 @@
-/* Styles pour le conteneur du quiz */
 .quiz-container {
     max-width: 600px;
-    margin: 0 auto; /* Centrer horizontalement */
+    margin: 0 auto;
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
 }
 
-/* Styles pour les questions */
 .question {
     font-size: 18px;
     margin-bottom: 15px;
 }
 
-/* Styles pour les réponses */
 .answer {
     display: block;
     margin-bottom: 10px;
 }
 
-/* Styles pour le bouton de soumission et le bouton de sortie */
-input[type="submit"],
-.exit {
+input[type="submit"], .exit {
     height: 100%;
     background-color: #8365be;
     color: #fff;
@@ -34,25 +29,21 @@ input[type="submit"],
     align-items: center;
 }
 
-/* Styles pour le bouton de sortie */
 .exit {
     width: 65px;
-    margin-left: auto; /* Aligner à droite */
-    padding: 10px 350px; /* Ajouter du padding */
-    margin-right: auto; /* Aligner à gauche */
+    margin-left: auto;
+    padding: 10px 350px;
+    margin-right: auto;
 }
 
-/* Styles pour les liens */
 a {
     text-decoration: none;
 }
 
-/* Styles pour la flèche */
 .arrow {
     padding-bottom: 2px;
 }
 
-/* Styles pour la vidéo de fond */
 #background-video {
     width: 100%;
     height: 100%;
@@ -64,18 +55,15 @@ a {
     z-index: -1;
 }
 
-/* Styles pour le titre principal */
 h1 {
     text-align: center;
     color: #8365be;
 }
 
-/* Couleur de fond pour le corps */
 body {
     background-color: #A494C4;
 }
 
-/* Styles pour les cartes */
 .card {
     width: 800px;
     border-radius: 8px;
@@ -88,7 +76,6 @@ body {
     margin-right: auto;
 }
 
-/* Styles pour le survol des boutons */
 input:hover {
     color: #fff;
     border-color: #fff;
@@ -96,7 +83,6 @@ input:hover {
     background: rgba(255, 255, 255, 0.15);
 }
 
-/* Styles pour le bouton de soumission */
 .submit-btn {
     width: 100%; /* Fixer la largeur à 100% */
     margin-left: auto;
@@ -105,49 +91,35 @@ input:hover {
     text-decoration: none;
 }
 
-/* Styles pour le survol du bouton de soumission */
 .submit-btn:hover {
     opacity: 0.8; /* Réduire l'opacité lors du survol */
     cursor: pointer; /* Indiquer que le bouton est cliquable */
 }
-
-/* Styles pour les titres et paragraphes */
 h2, p {
     color: #fff;
     font-size: 30px;
     margin-top: 8px;
 }
-
-/* Styles pour les étiquettes */
 label {
     width: 100%;
+   
 }
-
-/* Styles pour les boutons */
 .btn, .btn-outline-primary {
     background-color: #fff;
     padding: 12px 15px;
     font-size: 22px;
 }
-
-/* Styles pour les boutons au survol */
 .btn, .btn-outline-primary:hover {
     background-color: #fff;
 }
-
-/* Styles pour les cases à cocher */
 .form-check {
     padding: 0;
 }
-
-/* Styles pour le minuteur */
 #timer {
     color: #8365be;
     font-size: 30px;
     font-weight: bolder;
 }
-
-/* Styles pour les icônes */
 i {
     margin-left: 10px;
     margin-top: 3px;

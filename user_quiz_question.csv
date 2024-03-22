@@ -2,3 +2,4 @@ id,id_quiz,question,points,libre
 1,1,"Quel est le nom de la première femme à avoir remporté un prix Nobel ?",5,qcm
 2,1,"Quelle est la formule chimique de l'eau ?",5,qcm
 3,1,"Qui a découvert la loi de la gravitation universelle ?",5,qcm
+4,14,"Que pensez vous de notre devoir ?",-1,libre
