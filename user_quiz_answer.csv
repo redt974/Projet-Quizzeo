@@ -1,4 +1,4 @@
-id,id_question,answer,correct,pourcentage
+id,id_question,answer,correct
 1,1,"Rosalind Franklin",0
 2,1,"Barbara McClintock",0
 3,2,H2O,1
