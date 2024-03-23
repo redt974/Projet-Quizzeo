@@ -297,23 +297,26 @@
                         </thead>
                         <tbody>';
             while (($row = fgetcsv($file)) !== false) {
-                if ($row[4] != -1 ){
-                    $user = quizUser($row[1]);
-                    echo "<tr>
-                                <td>" . ucwords(quizTitre($row[2])) . "</td>
-                                <td>" . $user[0] . " ".$user[1]."</td>
-                                <td>" . $row[3] . "/" . $row[4] . "</td>
-                                <td>" . $row[5] . "</td>
-                                <td><p class='status shipped'>" . ucwords($row[6]) . "</p></td>
-                            </tr>";
-                }
-          echo      '</table>
-                </section>
-                </main>';
+
+                $user = quizUser($row[1]);
+                echo "<tr>
+                            <td>" . ucwords(quizTitre($row[2])) . "</td>
+                            <td>" . $user[0] . " ".$user[1]."</td>";
+                            if ($row[4] != -1 ) {
+                                echo "<td>" . $row[3] . "/" . $row[4] . "</td>";
+                            } else {
+                                echo "<td>Réponse Libre</td>";
+                            }
+                            echo "<td>" . $row[5] . "</td>
+                            <td><p class='status shipped'>" . ucwords($row[6]) . "</p></td>
+                        </tr>";
             } 
         } else {
             echo "<h2>Aucun quiz n'a été terminé ! Revenez plus tard !</h2>"; 
         }
+        echo      '</table>
+        </section>
+        </main>';
         fclose($file);
     }
 
@@ -502,13 +505,88 @@
             return [$nom, $prenom];
         }
 
-        // Ouvrir le fichier CSV en lecture
-        $file = fopen('user_result_game.csv', 'r');
-        // Ignorer la première ligne
-        fgetcsv($file);
+        function getRoleQuiz($id_quiz){
+            $role = "";
+            $id_user = "";
 
-        if (($row = fgetcsv($file)) !== false) {
+            // Ouvrir le fichier CSV en lecture
+            $file = fopen('user_quiz.csv', 'r');
+            // Ignorer la première ligne
+            fgetcsv($file);
+
+            while (($row = fgetcsv($file)) !== false) {
+                if ($id_quiz == $row[0]) {
+                    $id_user = $row[1];
+                }
+            }
+
             fclose($file);
+
+            // Ouvrir le fichier CSV en lecture
+            $file = fopen('utilisateurs.csv', 'r');
+            // Ignorer la première ligne
+            fgetcsv($file);
+
+            while (($row = fgetcsv($file)) !== false) {
+                if ($id_user == $row[0]) {
+                    $role = $row[5];
+                }
+            }
+
+            fclose($file);
+
+            return $role;
+        }
+
+        if ($_SESSION['role'] == 'school'){
+
+                // Ouvrir le fichier CSV en lecture
+                $file = fopen('user_result_game.csv', 'r');
+                // Ignorer la première ligne
+                fgetcsv($file);
+                // Afficher le tableau des quiz
+
+                echo '<main class="table" id="customers_table">
+                <section class="table__header">
+                    <h1>Tableau des QCM terminés :</h1>
+                    <div class="input-group">
+                        <input type="search" placeholder="Rechercher...">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                </section>
+                <section class="table__body">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Titre</th>
+                                <th>Utilisateur</th>
+                                <th>Résultat</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                            </thead>
+                            <tbody>';
+                while (($row = fgetcsv($file)) !== false) {
+                    if ($row[4] != -1 && getRoleQuiz($row[2]) == 'school'){
+                        $user = quizUser($row[1]);
+                        echo "<tr>
+                                    <td>" . ucwords(quizTitre($row[2])) . "</td>
+                                    <td>" . $user[0] . " ".$user[1]."</td>
+                                    <td>" . $row[3] . "/" . $row[4] . "</td>
+                                    <td>" . $row[5] . "</td>
+                                    <td><p class='status shipped'>" . ucwords($row[6]) . "</p></td>
+                                </tr>";
+                    }
+                } 
+                echo '</tbody>
+                </table>
+            </section>
+            </main>';
+            fclose($file);
+            
+        }
+
+        if ($_SESSION['role'] == 'company'){
 
             // Ouvrir le fichier CSV en lecture
             $file = fopen('user_result_game.csv', 'r');
@@ -536,29 +614,24 @@
                         </tr>
                         </thead>
                         <tbody>';
-            while (($row = fgetcsv($file)) !== false) {
-                if ($row == false) {
-                    echo "<div>Personne n'a fait l'un de vos quiz ! Revenez plus tard !</div>";
-                } else if ($row[4] != -1 ){
-                    $user = quizUser($row[1]);
-                    echo "<tr>
-                                <td>" . ucwords(quizTitre($row[2])) . "</td>
-                                <td>" . $user[0] . " ".$user[1]."</td>
-                                <td>" . $row[3] . "/" . $row[4] . "</td>
-                                <td>" . $row[5] . "</td>
-                                <td><p class='status shipped'>" . ucwords($row[6]) . "</p></td>
-                            </tr>";
-                }
-            } 
-            echo '</tbody>
-            </table>
-        </section>
-        </main>';
-        fclose($file);
-        }
-
-        if ($_SESSION['role'] == 'company'){
-
+                while (($row = fgetcsv($file)) !== false) {
+                    if ($row[4] != -1 && getRoleQuiz($row[2]) == 'company'){
+                        $user = quizUser($row[1]);
+                        echo "<tr>
+                                    <td>" . ucwords(quizTitre($row[2])) . "</td>
+                                    <td>" . $user[0] . " ".$user[1]."</td>
+                                    <td>" . $row[3] . "/" . $row[4] . "</td>
+                                    <td>" . $row[5] . "</td>
+                                    <td><p class='status shipped'>" . ucwords($row[6]) . "</p></td>
+                                </tr>";
+                    }
+                } 
+                echo '</tbody>
+                </table>
+            </section>
+            </main>';
+            fclose($file);
+        
             // Ouvrir le fichier CSV en lecture
             $file = fopen('user_quiz_free_answer.csv', 'r');
             // Ignorer la première ligne
@@ -756,13 +829,17 @@
                     </thead>
                     <tbody>';
         while (($row = fgetcsv($file)) !== false) {
-            if ($_SESSION['id'] == $row[1] && $row[4] != -1 ){
+            if ($_SESSION['id'] == $row[1] ){
                 $user = quizUser($row[1]);
                 echo "<tr>
                             <td>" . ucwords(quizTitre($row[2])) . "</td>
-                            <td>" . $user[0] . " ".$user[1]."</td>
-                            <td>" . $row[3] . "/" . $row[4] . "</td>
-                            <td>" . $row[5] . "</td>
+                            <td>" . $user[0] . " ".$user[1]."</td>";
+                            if ($row[4] != -1 ) {
+                                echo "<td>" . $row[3] . "/" . $row[4] . "</td>";
+                            } else {
+                                echo "<td>Réponse Libre</td>";
+                            }
+                            echo "<td>" . $row[5] . "</td>
                             <td><p class='status shipped'>" . ucwords($row[6]) . "</p></td>
                         </tr>";
             } 

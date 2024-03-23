@@ -9,3 +9,5 @@ id,id_question,answer,correct
 8,3,"Albert Einstein",0
 9,3,"Galileo Galilei",0
 10,3,"Nikola Tesla",0
+11,5,H2O,1
+12,5,CO2,0

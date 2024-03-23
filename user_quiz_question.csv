@@ -3,3 +3,4 @@ id,id_quiz,question,points,libre
 2,1,"Quelle est la formule chimique de l'eau ?",5,qcm
 3,1,"Qui a découvert la loi de la gravitation universelle ?",5,qcm
 4,14,"Que pensez vous de notre devoir ?",-1,libre
+5,15,"Quelle est la formule chimique de l'eau ?",10,qcm
