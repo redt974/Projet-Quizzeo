@@ -2,6 +2,6 @@ id,prenom,nom,email,password,role,status,active
 1,Thibaut,Vandier,admin@gmail.com,$2y$10$dIdR8hA0pKuvpSYWba.m1.94fKNDG63uyeG/bFlzMuy3c9fdv93Su,admin,disconnected,active
 2,Emrys,Agboton,ecole@gmail.com,$2y$10$TauLIXtihoPakL3lhCW7Y.KljJDWIDDrsqBK8pzygHSU8RmdPGERm,school,disconnected,active
 3,Jude,Gigon,entreprise@gmail.com,$2y$10$j78wpvxALeZSJRxJ3/TBDuxIF31wz8A.xELtDpv03AjpcD60.aBdq,company,disconnected,active
-4,Yanis,Smati,user@gmail.com,$2y$10$2cM5VdOYN7HAt8/8ErsqTebE.mkgaNYmZI5vpBNvwulfdQhW2ZKSK,user,connected,active
+4,Yanis,Smati,user@gmail.com,$2y$10$2cM5VdOYN7HAt8/8ErsqTebE.mkgaNYmZI5vpBNvwulfdQhW2ZKSK,user,disconnected,active
 5,Stevens,SIMONIS,user1@gmail.com,$2y$10$rdAZO7XuD.h56y27rEN4OOROhXDEUD6QwwVdzvLMkhw0pPjsdwt4G,user,disconnected,active
 6,Bogdan,Radauta,bogdan@gmail.com,$2y$10$SyZP7wNLM9SC367Iq239FuAnp8lb4LQVfsHh7m3JLAafLpxRg//wa,school,connected,active
